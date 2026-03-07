@@ -1,0 +1,38 @@
+export const team = [
+  {
+    id: 1,
+    name: 'Aron Goves',
+    role: 'Founder & Creative Director',
+    experience: '5+ Years',
+    bio: 'Visionary behind ShutterBeat Media. Passionate about creativity, storytelling and building brands.',
+    linkedin: '#',
+    image: null,
+  },
+  {
+    id: 2,
+    name: 'Team Member',
+    role: 'Lead Photographer',
+    experience: '4+ Years',
+    bio: 'Specialist in wedding, product and fashion photography with an eye for detail.',
+    linkedin: '#',
+    image: null,
+  },
+  {
+    id: 3,
+    name: 'Team Member',
+    role: 'Film Director',
+    experience: '3+ Years',
+    bio: 'Expert in brand films, short films and music videos.',
+    linkedin: '#',
+    image: null,
+  },
+  {
+    id: 4,
+    name: 'Team Member',
+    role: 'Digital Marketing Head',
+    experience: '4+ Years',
+    bio: 'Drives result-oriented advertising and social media campaigns.',
+    linkedin: '#',
+    image: null,
+  },
+]

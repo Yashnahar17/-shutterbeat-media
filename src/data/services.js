@@ -1,0 +1,72 @@
+export const services = [
+  {
+    id: 'photography',
+    title: 'Photography',
+    slug: '/services/photography',
+    icon: 'Camera',
+    shortDesc: 'We love capturing your special moments for you to cherish forever. Right from wedding photography to product photography.',
+    categories: ['Wedding','Product / Brand','Food','Architectural','Events','Fashion','Automotive','Portfolios','Wildlife'],
+  },
+  {
+    id: 'music',
+    title: 'Music',
+    slug: '/services/music',
+    icon: 'Music',
+    shortDesc: 'Being huge music enthusiasts ourselves we give artists all they need to showcase their talent to the world.',
+    categories: ['Disk Jockey','Lyrics','Original Production','Compositions','Background Scores','Jingles'],
+  },
+  {
+    id: 'events',
+    title: 'Event & Artist Management',
+    slug: '/services/events',
+    icon: 'Calendar',
+    shortDesc: 'We offer services like corporate events, wedding events, live performances of artists, bands and much more.',
+    eventTypes: ['Weddings','Corporate Events','Music Concerts','Promotional Events','Social Events'],
+    artistCategories: ['Film Makers','Graphic Designers','Tattoo Artists','Photographers','Film Makers'],
+  },
+  {
+    id: 'film-making',
+    title: 'Film Making',
+    slug: '/services/film-making',
+    icon: 'Film',
+    shortDesc: 'We strive to send out a message through our films and curate original content. Right from ad films to music videos.',
+    categories: ['Brand Coverage','Short Films','Documentaries','Weddings & Events','Showreels / Portfolios','Commercial Films','Advertisements & Endorsements','Official Music Videos'],
+  },
+  {
+    id: 'advertising',
+    title: 'Advertising & Marketing',
+    slug: '/services/advertising',
+    icon: 'Megaphone',
+    shortDesc: 'We bring effective and result-oriented advertising and marketing campaigns to grow your business.',
+    categories: ['Social Media Coverage','Photography & Videography Coverage','Official Media Coverage','Venue & Resource Management','Print Media Coverage','Press & Media Coverage','Institutional Coverage','OOH Corporate Coverage'],
+  },
+  {
+    id: 'web-development',
+    title: 'Web & App Development',
+    slug: '/services/web-development',
+    icon: 'Code',
+    shortDesc: 'Putting the tech in your idea. Reach out to us to make your idea accessible to everyone in just a few taps.',
+    categories: ['Static Websites','Dynamic Websites','E-Commerce'],
+  },
+  {
+    id: 'branding',
+    title: 'Branding',
+    slug: '/services/branding',
+    icon: 'Layers',
+    shortDesc: 'Transform your business into a brand people love. We craft identities that resonate, inspire, and endure.',
+    categories: ['Brand Strategy','Visual Identity','Logo Design','Brand Guidelines'],
+  },
+  {
+    id: 'consultation',
+    title: 'Business Consultation',
+    slug: '/services/consultation',
+    icon: 'Briefcase',
+    shortDesc: 'Strategic guidance to grow your business. From go-to-market strategy to digital transformation.',
+    categories: ['Brand Strategy','Digital Transformation','Go-To-Market Strategy','Monetization Models'],
+  },
+]
+
+export const navServices = services.map(s => ({
+  label: s.title,
+  href:  s.slug,
+}))

@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Sarpanch:wght@600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply scroll-smooth;
+    background-color: #EDD9C4; /* Beige background */
+    color: #485AA8; /* Indigo primary text */
+    font-family: 'Avenir Next', Avenir, system-ui, sans-serif;
+  }
+
+  body {
+    background-color: #EDD9C4;
+    color: #485AA8;
+    font-family: 'Avenir Next', Avenir, system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Sarpanch', sans-serif;
+    font-weight: 600; /* Sarpanch Semi Bold */
+    color: #485AA8;
+  }
+
+  * { @apply m-0 p-0 box-border; }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background-color: #d9c2aa; }
+  ::-webkit-scrollbar-thumb { background-color: #485AA8; border-radius: 9999px; }
+}
+
+@layer components {
+  .btn-primary {
+    @apply text-tertiary px-6 py-3 rounded-btn font-semibold transition-all duration-300 inline-flex items-center gap-2 hover:-translate-y-0.5;
+    background-color: #485AA8; /* Indigo */
+  }
+  .btn-primary:hover {
+    background-color: #3f4f95;
+  }
+
+  .btn-secondary {
+    @apply px-6 py-3 rounded-btn font-semibold transition-all duration-300 inline-flex items-center gap-2;
+    border: 1px solid #4DB4C0; /* Cyan */
+    color: #4DB4C0;
+  }
+  .btn-secondary:hover {
+    background-color: #4DB4C0;
+    color: #EDD9C4;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2 transition-colors duration-200 underline-offset-4 hover:underline;
+    color: rgb(72 90 168 / 0.7);
+  }
+  .btn-ghost:hover {
+    color: #485AA8;
+  }
+
+  .card {
+    @apply rounded-card p-6 transition-all duration-300 hover:-translate-y-1 border;
+    background-color: #f4e8dc;
+    border-color: #d7c2ad;
+    color: #485AA8;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-16 lg:py-24;
+  }
+
+  .text-gradient {
+    background: linear-gradient(to right, #485AA8, #4DB4C0, #485AA8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .section-tag {
+    @apply text-sm font-semibold tracking-widest uppercase mb-3 block;
+    color: #4DB4C0;
+  }
+}
