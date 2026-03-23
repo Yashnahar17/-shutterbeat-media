@@ -1,69 +1,110 @@
-export const clientsByService = {
-  photography: [
-    { id:1, name:'Sharma Family',        website:'#' },
-    { id:2, name:'FreshBite Restaurant', website:'#' },
-    { id:3, name:'ZenFit Apparel',       website:'#' },
-    { id:4, name:'Skyline Realty',       website:'#' },
-    { id:5, name:'DriveX Motors',        website:'#' },
-    { id:6, name:'PuneFest Org',         website:'#' },
-  ],
-  advertising: [
-    { id:1, name:'RetailCo',             website:'#' },
-    { id:2, name:'QuickDeliver',         website:'#' },
-    { id:3, name:'EduSpark Academy',     website:'#' },
-    { id:4, name:'GreenLife Organics',   website:'#' },
-    { id:5, name:'DriveX Motors',        website:'#' },
-    { id:6, name:'ZenFit Apparel',       website:'#' },
-  ],
-  events: [
-    { id:1, name:'TechVentures Pune',    website:'#' },
-    { id:2, name:'Patil Family',         website:'#' },
-    { id:3, name:'PuneFest Org',         website:'#' },
-    { id:4, name:'DriveX Motors',        website:'#' },
-    { id:5, name:'RetailCo',             website:'#' },
-    { id:6, name:'GreenLife Organics',   website:'#' },
-  ],
-  'film-making': [
-    { id:1, name:'DriveX Motors',        website:'#' },
-    { id:2, name:'EduSpark Academy',     website:'#' },
-    { id:3, name:'Riya Kapoor',          website:'#' },
-    { id:4, name:'PuneFest Org',         website:'#' },
-    { id:5, name:'RetailCo',             website:'#' },
-    { id:6, name:'ZenFit Apparel',       website:'#' },
-  ],
-  branding: [
-    { id:1, name:'ZenFit Apparel',       website:'#' },
-    { id:2, name:'FreshBite Restaurant', website:'#' },
-    { id:3, name:'GreenLife Organics',   website:'#' },
-    { id:4, name:'QuickDeliver',         website:'#' },
-    { id:5, name:'EduSpark Academy',     website:'#' },
-    { id:6, name:'RetailCo',             website:'#' },
-  ],
-  'web-development': [
-    { id:1, name:'DriveX Motors',        website:'#' },
-    { id:2, name:'FreshBite Restaurant', website:'#' },
-    { id:3, name:'EduSpark Academy',     website:'#' },
-    { id:4, name:'GreenLife Organics',   website:'#' },
-    { id:5, name:'RetailCo',             website:'#' },
-    { id:6, name:'QuickDeliver',         website:'#' },
-  ],
-  music: [
-    { id:1, name:'Neha Sharma',          website:'#' },
-    { id:2, name:'DJ Karan',             website:'#' },
-    { id:3, name:'RetailCo',             website:'#' },
-    { id:4, name:'PuneFest Org',         website:'#' },
-    { id:5, name:'ZenFit Apparel',       website:'#' },
-    { id:6, name:'GreenLife Organics',   website:'#' },
-  ],
-  consultation: [
-    { id:1, name:'ZenFit Apparel',       website:'#' },
-    { id:2, name:'EduSpark Academy',     website:'#' },
-    { id:3, name:'GreenLife Organics',   website:'#' },
-    { id:4, name:'QuickDeliver',         website:'#' },
-    { id:5, name:'DriveX Motors',        website:'#' },
-    { id:6, name:'RetailCo',             website:'#' },
-  ],
+import zenfitLogo from '../assets/logos/clients/zenfit-apparel.svg'
+import freshbiteLogo from '../assets/logos/clients/freshbite-restaurant.svg'
+import greenlifeLogo from '../assets/logos/clients/greenlife-organics.svg'
+import quickdeliverLogo from '../assets/logos/clients/quickdeliver.svg'
+import edusparkLogo from '../assets/logos/clients/eduspark-academy.svg'
+import retailcoLogo from '../assets/logos/clients/retailco.svg'
+
+const clientBranding = {
+  'ZenFit Apparel': {
+    website: 'https://www.google.com/search?q=ZenFit+Apparel',
+    logo: zenfitLogo,
+  },
+  'FreshBite Restaurant': {
+    website: 'https://www.google.com/search?q=FreshBite+Restaurant',
+    logo: freshbiteLogo,
+  },
+  'GreenLife Organics': {
+    website: 'https://www.google.com/search?q=GreenLife+Organics',
+    logo: greenlifeLogo,
+  },
+  QuickDeliver: {
+    website: 'https://www.google.com/search?q=QuickDeliver',
+    logo: quickdeliverLogo,
+  },
+  'EduSpark Academy': {
+    website: 'https://www.google.com/search?q=EduSpark+Academy',
+    logo: edusparkLogo,
+  },
+  RetailCo: {
+    website: 'https://www.google.com/search?q=RetailCo',
+    logo: retailcoLogo,
+  },
 }
 
-// Footer / home fallback
+const withSearchLink = (names) =>
+  names.map((name, index) => ({
+    id: index + 1,
+    name,
+    website: clientBranding[name]?.website || `https://www.google.com/search?q=${encodeURIComponent(name)}`,
+    logo: clientBranding[name]?.logo || null,
+  }))
+
+export const clientsByService = {
+  photography: withSearchLink([
+    'Sharma Family',
+    'FreshBite Restaurant',
+    'ZenFit Apparel',
+    'Skyline Realty',
+    'DriveX Motors',
+    'PuneFest Org',
+  ]),
+  advertising: withSearchLink([
+    'RetailCo',
+    'QuickDeliver',
+    'EduSpark Academy',
+    'GreenLife Organics',
+    'DriveX Motors',
+    'ZenFit Apparel',
+  ]),
+  events: withSearchLink([
+    'TechVentures Pune',
+    'Patil Family',
+    'PuneFest Org',
+    'DriveX Motors',
+    'RetailCo',
+    'GreenLife Organics',
+  ]),
+  'film-making': withSearchLink([
+    'DriveX Motors',
+    'EduSpark Academy',
+    'Riya Kapoor',
+    'PuneFest Org',
+    'RetailCo',
+    'ZenFit Apparel',
+  ]),
+  branding: withSearchLink([
+    'ZenFit Apparel',
+    'FreshBite Restaurant',
+    'GreenLife Organics',
+    'QuickDeliver',
+    'EduSpark Academy',
+    'RetailCo',
+  ]),
+  'web-development': withSearchLink([
+    'DriveX Motors',
+    'FreshBite Restaurant',
+    'EduSpark Academy',
+    'GreenLife Organics',
+    'RetailCo',
+    'QuickDeliver',
+  ]),
+  music: withSearchLink([
+    'Neha Sharma',
+    'DJ Karan',
+    'RetailCo',
+    'PuneFest Org',
+    'ZenFit Apparel',
+    'GreenLife Organics',
+  ]),
+  consultation: withSearchLink([
+    'ZenFit Apparel',
+    'EduSpark Academy',
+    'GreenLife Organics',
+    'QuickDeliver',
+    'DriveX Motors',
+    'RetailCo',
+  ]),
+}
+
 export const clients = clientsByService.branding

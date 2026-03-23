@@ -1,0 +1,7 @@
+<svg width="240" height="96" viewBox="0 0 240 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="96" rx="24" fill="#FFF1F0"/>
+  <rect x="18" y="18" width="60" height="60" rx="18" fill="#D94F45"/>
+  <path d="M37 61V35H50C57 35 61 39 61 45C61 50 58 53 54 54L62 61H54L47 55H44V61H37ZM44 49H49C52.5 49 54 47.5 54 45C54 42.5 52.5 41 49 41H44V49Z" fill="#FFF1F0"/>
+  <text x="94" y="42" fill="#4B1E1A" font-family="Arial, sans-serif" font-size="21" font-weight="700">RetailCo</text>
+  <text x="94" y="63" fill="#8A5C55" font-family="Arial, sans-serif" font-size="12" letter-spacing="1.8">RETAIL GROUP</text>
+</svg>

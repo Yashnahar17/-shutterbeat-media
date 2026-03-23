@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://shutterbeat-media.com/sitemap.xml

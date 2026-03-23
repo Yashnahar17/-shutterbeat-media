@@ -12,6 +12,7 @@ export const services = [
     title: 'Music',
     slug: '/services/music',
     icon: 'Music',
+    hidden: true,
     shortDesc: 'Being huge music enthusiasts ourselves we give artists all they need to showcase their talent to the world.',
     categories: ['Disk Jockey','Lyrics','Original Production','Compositions','Background Scores','Jingles'],
   },
@@ -20,8 +21,8 @@ export const services = [
     title: 'Event & Artist Management',
     slug: '/services/events',
     icon: 'Calendar',
-    shortDesc: 'We offer services like corporate events, wedding events, live performances of artists, bands and much more.',
-    eventTypes: ['Weddings','Corporate Events','Music Concerts','Promotional Events','Social Events'],
+    shortDesc: 'We offer corporate events, wedding events, branded experiences and end-to-end event production with tight coordination.',
+    eventTypes: ['Weddings','Corporate Events','Promotional Events','Exhibitions','Social Events'],
     artistCategories: ['Film Makers','Graphic Designers','Tattoo Artists','Photographers','Film Makers'],
   },
   {
@@ -29,8 +30,8 @@ export const services = [
     title: 'Film Making',
     slug: '/services/film-making',
     icon: 'Film',
-    shortDesc: 'We strive to send out a message through our films and curate original content. Right from ad films to music videos.',
-    categories: ['Brand Coverage','Short Films','Documentaries','Weddings & Events','Showreels / Portfolios','Commercial Films','Advertisements & Endorsements','Official Music Videos'],
+    shortDesc: 'We strive to send out a message through our films and curate original content, from ad films to documentaries and brand stories.',
+    categories: ['Brand Coverage','Short Films','Documentaries','Weddings & Events','Showreels / Portfolios','Commercial Films','Advertisements & Endorsements','Campaign Films'],
   },
   {
     id: 'advertising',
@@ -66,7 +67,37 @@ export const services = [
   },
 ]
 
-export const navServices = services.map(s => ({
+const serviceById = Object.fromEntries(services.map((service) => [service.id, service]))
+
+export const visibleServices = [
+  {
+    ...serviceById.consultation,
+    title: 'Consultation',
+  },
+  {
+    ...serviceById.branding,
+  },
+  {
+    ...serviceById.advertising,
+    title: 'Marketing and Advertising',
+  },
+  {
+    ...serviceById['web-development'],
+    title: 'Web Development',
+  },
+  {
+    ...serviceById.photography,
+    title: 'Photography and Film Making',
+    shortDesc: 'Photography and film making services crafted to capture, shape and elevate your story across every frame.',
+    categories: ['Photography', 'Film Making', 'Brand Films', 'Commercial Shoots'],
+  },
+  {
+    ...serviceById.events,
+    title: 'Event and Artist Management',
+  },
+]
+
+export const navServices = visibleServices.map(s => ({
   label: s.title,
   href:  s.slug,
 }))

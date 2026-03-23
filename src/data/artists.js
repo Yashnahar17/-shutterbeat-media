@@ -1,3 +1,6 @@
+import artistSingerImage from '../assets/images/site/team-creative-director.jpg'
+import artistDjImage from '../assets/images/site/team-marketing.jpg'
+
 export const artists = [
   {
     id: 1,
@@ -5,9 +8,13 @@ export const artists = [
     category: 'Music',
     genre: 'Indie / Pop',
     bio: 'A passionate musician creating original compositions and background scores.',
-    image: null,
+    image: artistSingerImage,
     tracks: [],
-    platforms: { spotify: '#', youtube: '#', instagram: '#' },
+    platforms: {
+      spotify: 'https://open.spotify.com',
+      youtube: 'https://www.youtube.com',
+      instagram: 'https://www.instagram.com',
+    },
   },
   {
     id: 2,
@@ -15,8 +22,11 @@ export const artists = [
     category: 'Disk Jockey',
     genre: 'EDM / Bollywood',
     bio: 'High energy DJ available for weddings, corporate events and concerts.',
-    image: null,
+    image: artistDjImage,
     tracks: [],
-    platforms: { instagram: '#', youtube: '#' },
+    platforms: {
+      instagram: 'https://www.instagram.com',
+      youtube: 'https://www.youtube.com',
+    },
   },
 ]

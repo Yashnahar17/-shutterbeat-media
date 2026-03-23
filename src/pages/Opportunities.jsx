@@ -1,19 +1,12 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion as Motion} from 'framer-motion'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Briefcase, MapPin, Clock, Upload, Send, Palette, Code, Megaphone, Film } from 'lucide-react'
+import { Briefcase, MapPin, Clock, Upload, Send, Palette, Code, Megaphone, Film, Download } from 'lucide-react'
 import { jobs } from '../data/jobs'
-
-const schema = z.object({
-  name:      z.string().min(2, 'Name must be at least 2 characters'),
-  email:     z.string().email('Please enter a valid email address'),
-  portfolio: z.string().url('Please enter a valid URL').optional().or(z.literal('')),
-  type:      z.string().min(1, 'Please select an employment type'),
-  role:      z.string().optional(),
-  message:   z.string().optional(),
-})
+import TurnstileWidget from '../components/shared/TurnstileWidget'
+import { careerSchema } from '../shared/security/formSchemas'
+import SectionHeading from '../components/ui/SectionHeading'
 
 const freelancerCategories = [
   { icon:Palette, title:'Designers',   desc:'Graphic designers, motion designers and UI/UX specialists.' },
@@ -25,18 +18,85 @@ const freelancerCategories = [
 const TYPE_COLOR = {
   'Full-time':'bg-primary/20 text-primary border-primary/30',
   'Part-time':'bg-secondary/20 text-secondary border-secondary/30',
-  'Freelance':'bg-tertiary/20 text-tertiary border-tertiary/30',
+  'Freelance':'bg-white/20 text-tertiary border-tertiary/30',
+}
+
+const FIELD_LABEL = 'mb-1.5 block font-body text-xs tracking-wide text-primary/68'
+const FIELD_INPUT = 'w-full rounded-xl border border-primary/12 bg-white px-4 py-3 text-primary font-body text-sm placeholder:text-primary/30 transition-colors focus:border-primary/45 focus:outline-none'
+const FIELD_ERROR = 'mt-1 text-xs text-red-600'
+
+function buildJobDescription(job) {
+  return [
+    `${job.title} - ShutterBeat Media`,
+    '',
+    `Employment Type: ${job.type}`,
+    `Location: ${job.location || 'Pune / Remote'}`,
+    `Experience: ${job.experience || '2+ years'}`,
+    '',
+    'Job Description',
+    job.description,
+    '',
+    'To apply, visit the careers page on the ShutterBeat Media website and submit your application.',
+  ].join('\n')
+}
+
+function downloadJobDescription(job) {
+  const fileContents = buildJobDescription(job)
+  const blob = new Blob([fileContents], { type: 'text/plain;charset=utf-8' })
+  const fileUrl = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  const safeTitle = job.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+
+  link.href = fileUrl
+  link.download = `${safeTitle || 'job-description'}-job-description.txt`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(fileUrl)
 }
 
 export default function Opportunities() {
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY ?? ''
+  const resumeUploadEnabled = import.meta.env.VITE_ENABLE_RESUME_UPLOAD === 'true'
   const [submitted, setSubmitted] = useState(false)
-  const { register, handleSubmit, formState:{ errors }, reset } = useForm({ resolver: zodResolver(schema) })
+  const [submitError, setSubmitError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { register, handleSubmit, formState:{ errors }, reset, setValue } = useForm({
+    resolver: zodResolver(careerSchema),
+    defaultValues: {
+      website: '',
+      turnstileToken: '',
+      resumeUploadEnabled,
+    },
+  })
 
-  const onSubmit = (data) => {
-    console.log('Application:', data)
-    setSubmitted(true)
-    reset()
-    setTimeout(() => setSubmitted(false), 5000)
+  const onSubmit = async (data) => {
+    setSubmitError('')
+    setSubmitted(false)
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch('/api/careers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...data, resumeUploadEnabled }),
+      })
+
+      const result = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        throw new Error(result.error || 'Unable to submit your application right now.')
+      }
+
+      setSubmitted(true)
+      reset({ name: '', email: '', portfolio: '', type: '', role: '', message: '', website: '', turnstileToken: '', resumeUploadEnabled })
+      setTimeout(() => setSubmitted(false), 5000)
+    } catch (error) {
+      setSubmitError(error.message || 'Unable to submit your application right now.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const GRID_STYLE = {
@@ -45,59 +105,73 @@ export default function Opportunities() {
   }
 
   return (
-    <div className="bg-tertiary min-h-screen">
+    <div className="bg-white min-h-screen">
       {/* Banner */}
       <section className="relative min-h-[45vh] flex items-end pb-16 overflow-hidden">
-        <div className="absolute inset-0 bg-[#F4E8DC]" />
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary/15 via-[#F4E8DC] to-primary/10" />
+        <div className="absolute inset-0 bg-white" />
+        <div className="absolute inset-0 bg-gradient-to-br from-secondary/15 via-white to-primary/10" />
         <div className="absolute inset-0 opacity-5" style={GRID_STYLE} />
         <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-secondary/10 rounded-full blur-3xl" />
-        <div className="container-custom relative z-10 pt-36">
-          <motion.div initial={{ opacity:0, y:40 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.8 }}>
+        <div className="container-custom relative z-10 pt-32 sm:pt-36">
+          <Motion.div
+            initial={{ opacity:0, y:40 }}
+            animate={{ opacity:1, y:0 }}
+            transition={{ duration:0.8 }}
+            className="section-shell max-w-4xl px-6 py-8 sm:p-10">
             <span className="section-tag">Join the Team</span>
-            <h1 className="font-heading text-display text-primary mb-4 leading-tight">
+            <h1 className="font-heading text-display text-primary mb-4 leading-[1.04]" style={{ letterSpacing: '-0.025em' }}>
               Build With <span className="text-gradient">Us</span>
             </h1>
-            <p className="text-primary/50 font-body text-xl max-w-xl">
+            <p className="text-primary/74 font-body text-base sm:text-lg lg:text-[1.1rem] max-w-xl leading-relaxed">
               We're always looking for talented, passionate creatives to join our team.
             </p>
-          </motion.div>
+          </Motion.div>
         </div>
       </section>
 
       {/* Freelancer Categories */}
-      <section className="section-padding bg-tertiary">
+      <section className="section-padding bg-white">
         <div className="container-custom">
-          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
-            <span className="section-tag">Freelance Opportunities</span>
-            <h2 className="font-heading text-h2 text-primary">We're Looking for <span className="text-gradient">Creatives</span></h2>
-          </motion.div>
+          <Motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="mb-12 sm:mb-14">
+            <SectionHeading
+              tag="Freelance Careers"
+              title="We&apos;re Looking for"
+              accent="Creatives"
+              align="center"
+              className="max-w-2xl"
+            />
+          </Motion.div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {freelancerCategories.map((cat, i) => (
-              <motion.div key={cat.title} initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ delay:i*0.1 }}
+              <Motion.div key={cat.title} initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ delay:i*0.1 }}
                 className="card group hover:border-secondary/30 text-center">
                 <div className="w-12 h-12 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center mx-auto mb-4 group-hover:bg-secondary/20 transition-colors">
                   <cat.icon size={22} className="text-secondary" />
                 </div>
                 <h3 className="font-heading text-primary text-base mb-2">{cat.title}</h3>
-                <p className="text-primary/50 font-body text-sm leading-relaxed">{cat.desc}</p>
-              </motion.div>
+                <p className="text-primary/68 font-body text-sm leading-relaxed">{cat.desc}</p>
+              </Motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Job Listings */}
-      <section className="section-padding bg-[#F4E8DC] border-y border-[#D7C2AD]">
+      <section className="section-padding bg-white border-y border-tertiary">
         <div className="container-custom">
-          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
-            <span className="section-tag">Open Positions</span>
-            <h2 className="font-heading text-h2 text-primary">Current <span className="text-gradient">Openings</span></h2>
-          </motion.div>
-          <div className="grid sm:grid-cols-2 gap-6">
+          <Motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="mb-12 sm:mb-14">
+            <SectionHeading
+              tag="Open Positions"
+              title="Current"
+              accent="Openings"
+              align="center"
+              className="max-w-2xl"
+            />
+          </Motion.div>
+          <div className="grid sm:grid-cols-2 gap-5 sm:gap-6">
             {(jobs || []).map((job, i) => (
-              <motion.div key={job.id || i} initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ delay:i*0.1 }}
-                className="card group hover:border-primary/30">
+              <Motion.div key={job.id || i} initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ delay:i*0.1 }}
+                className="card group flex h-full flex-col hover:border-primary/30">
                 <div className="flex items-start justify-between mb-4 gap-3">
                   <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                     <Briefcase size={18} className="text-primary" />
@@ -106,28 +180,40 @@ export default function Opportunities() {
                     {job.type}
                   </span>
                 </div>
-                <h3 className="font-heading text-primary text-base mb-2">{job.title}</h3>
-                <p className="text-primary/50 font-body text-sm mb-4 leading-relaxed">{job.description}</p>
-                <div className="flex items-center gap-4 text-primary/30 text-xs font-body">
+                <h3 className="font-heading text-primary text-base sm:text-[1.05rem] mb-2">{job.title}</h3>
+                <p className="text-primary/68 font-body text-sm mb-4 leading-relaxed flex-1">{job.description}</p>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-primary/58 text-xs font-body">
                   <span className="flex items-center gap-1.5"><MapPin size={11}/> {job.location || 'Pune / Remote'}</span>
                   <span className="flex items-center gap-1.5"><Clock size={11}/> {job.experience || '2+ years'}</span>
                 </div>
-              </motion.div>
+                <button
+                  type="button"
+                  onClick={() => downloadJobDescription(job)}
+                  className="mt-5 inline-flex min-h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-2.5 font-body text-sm font-medium text-primary transition-colors hover:border-primary/35 hover:bg-primary/10">
+                  <Download size={15} />
+                  Download Job Description
+                </button>
+              </Motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Application Form */}
-      <section className="section-padding bg-tertiary">
+      <section className="section-padding bg-white">
         <div className="container-custom max-w-2xl">
-          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-12">
-            <span className="section-tag">Apply Now</span>
-            <h2 className="font-heading text-h2 text-primary">Submit Your <span className="text-gradient">Application</span></h2>
-          </motion.div>
+          <Motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="mb-10 sm:mb-12">
+            <SectionHeading
+              tag="Apply Now"
+              title="Submit Your"
+              accent="Application"
+              align="center"
+              className="max-w-2xl"
+            />
+          </Motion.div>
 
-          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }}
-            className="bg-[#F4E8DC] border border-[#D7C2AD] rounded-card p-8">
+          <Motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }}
+            className="section-shell p-6 sm:p-8">
 
             {submitted && (
               <div className="bg-secondary/10 border border-secondary/30 rounded-xl p-4 mb-6 text-secondary font-body text-sm">
@@ -135,70 +221,96 @@ export default function Opportunities() {
               </div>
             )}
 
+            {submitError && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 text-red-700 font-body text-sm">
+                {submitError}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-5">
+              <input type="text" tabIndex={-1} autoComplete="off" className="hidden" {...register('website')} />
+              <input type="hidden" {...register('turnstileToken')} />
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="text-primary/50 font-body text-xs mb-1.5 block tracking-wide">Full Name *</label>
+                  <label className={FIELD_LABEL}>Full Name *</label>
                   <input {...register('name')} placeholder="Your name"
-                    className="w-full bg-tertiary border border-[#D7C2AD] rounded-xl px-4 py-3 text-primary font-body text-sm placeholder:text-primary/20 focus:outline-none focus:border-primary/50 transition-colors" />
-                  {errors.name && <p className="text-primary text-xs mt-1">{errors.name.message}</p>}
+                    className={FIELD_INPUT} />
+                  {errors.name && <p className={FIELD_ERROR}>{errors.name.message}</p>}
                 </div>
                 <div>
-                  <label className="text-primary/50 font-body text-xs mb-1.5 block tracking-wide">Email Address *</label>
+                  <label className={FIELD_LABEL}>Email Address *</label>
                   <input {...register('email')} type="email" placeholder="your@email.com"
-                    className="w-full bg-tertiary border border-[#D7C2AD] rounded-xl px-4 py-3 text-primary font-body text-sm placeholder:text-primary/20 focus:outline-none focus:border-primary/50 transition-colors" />
-                  {errors.email && <p className="text-primary text-xs mt-1">{errors.email.message}</p>}
+                    className={FIELD_INPUT} />
+                  {errors.email && <p className={FIELD_ERROR}>{errors.email.message}</p>}
                 </div>
               </div>
 
               <div>
-                <label className="text-primary/50 font-body text-xs mb-1.5 block tracking-wide">Portfolio / LinkedIn URL</label>
+                <label className={FIELD_LABEL}>Portfolio / LinkedIn URL</label>
                 <input {...register('portfolio')} placeholder="https://yourportfolio.com"
-                  className="w-full bg-tertiary border border-[#D7C2AD] rounded-xl px-4 py-3 text-primary font-body text-sm placeholder:text-primary/20 focus:outline-none focus:border-primary/50 transition-colors" />
-                {errors.portfolio && <p className="text-primary text-xs mt-1">{errors.portfolio.message}</p>}
+                  className={FIELD_INPUT} />
+                {errors.portfolio && <p className={FIELD_ERROR}>{errors.portfolio.message}</p>}
               </div>
 
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="text-primary/50 font-body text-xs mb-1.5 block tracking-wide">Employment Type *</label>
+                  <label className={FIELD_LABEL}>Employment Type *</label>
                   <select {...register('type')}
-                    className="w-full bg-tertiary border border-[#D7C2AD] rounded-xl px-4 py-3 text-primary font-body text-sm focus:outline-none focus:border-primary/50 transition-colors appearance-none">
+                    className={`${FIELD_INPUT} appearance-none`}>
                     <option value="">Select type...</option>
                     <option>Full-time</option>
                     <option>Part-time</option>
                     <option>Freelance</option>
                     <option>Internship</option>
                   </select>
-                  {errors.type && <p className="text-primary text-xs mt-1">{errors.type.message}</p>}
+                  {errors.type && <p className={FIELD_ERROR}>{errors.type.message}</p>}
                 </div>
                 <div>
-                  <label className="text-primary/50 font-body text-xs mb-1.5 block tracking-wide">Role Applying For</label>
+                  <label className={FIELD_LABEL}>Role Applying For</label>
                   <input {...register('role')} placeholder="e.g. Photographer"
-                    className="w-full bg-tertiary border border-[#D7C2AD] rounded-xl px-4 py-3 text-primary font-body text-sm placeholder:text-primary/20 focus:outline-none focus:border-primary/50 transition-colors" />
+                    className={FIELD_INPUT} />
                 </div>
               </div>
 
               <div>
-                <label className="text-primary/50 font-body text-xs mb-1.5 block tracking-wide">Why ShutterBeat?</label>
+                <label className={FIELD_LABEL}>Why would you like to work with ShutterBeat Media?</label>
                 <textarea {...register('message')} rows={4} placeholder="Tell us about yourself and why you want to work with us..."
-                  className="w-full bg-tertiary border border-[#D7C2AD] rounded-xl px-4 py-3 text-primary font-body text-sm placeholder:text-primary/20 focus:outline-none focus:border-primary/50 transition-colors resize-none" />
+                  className={`${FIELD_INPUT} min-h-[140px] resize-none`} />
+                {errors.message && <p className={FIELD_ERROR}>{errors.message.message}</p>}
               </div>
 
-              {/* CV Upload placeholder */}
               <div>
-                <label className="text-primary/50 font-body text-xs mb-1.5 block tracking-wide">Upload CV / Resume</label>
-                <div className="border-2 border-dashed border-[#D7C2AD] rounded-xl p-6 text-center hover:border-primary/40 transition-colors cursor-pointer">
+                <label className={FIELD_LABEL}>Upload CV / Resume</label>
+                <div className="flex min-h-[132px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-primary/12 bg-slate-50/70 p-6 text-center">
                   <Upload size={24} className="text-primary/20 mx-auto mb-2" />
-                  <p className="text-primary/30 font-body text-sm">Drag & drop or click to upload</p>
-                  <p className="text-primary/20 font-body text-xs mt-1">PDF, DOC up to 10 MB</p>
+                  <p className="text-primary/60 font-body text-sm leading-relaxed max-w-lg">
+                    {resumeUploadEnabled
+                      ? 'Secure resume upload will be enabled after private object storage and malware scanning are configured.'
+                      : 'Resume upload is currently disabled until private object storage and malware scanning are configured.'}
+                  </p>
+                  <p className="text-primary/45 font-body text-xs mt-2">For now, please include your portfolio or LinkedIn URL.</p>
                 </div>
               </div>
 
-              <button type="submit" className="btn-primary w-full justify-center py-4 text-base mt-2">
-                Submit Application <Send size={18}/>
+              <div>
+                <label className={FIELD_LABEL}>Verification *</label>
+                <TurnstileWidget
+                  siteKey={turnstileSiteKey}
+                  onTokenChange={(token) => {
+                    setValue('turnstileToken', token, { shouldValidate: true })
+                  }}
+                />
+                {errors.turnstileToken && <p className={FIELD_ERROR}>{errors.turnstileToken.message}</p>}
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="btn-primary w-full justify-center py-4 text-base mt-2 disabled:opacity-70 disabled:cursor-not-allowed">
+                {isSubmitting ? 'Submitting...' : 'Submit Application'} <Send size={18}/>
               </button>
             </form>
-          </motion.div>
+          </Motion.div>
         </div>
       </section>
     </div>

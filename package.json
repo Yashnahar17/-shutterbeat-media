@@ -4,10 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "vite --host 127.0.0.1 --port 5173 --strictPort",
+    "audit": "npm audit --audit-level=high",
+    "build": "npm run seo:generate && vite build && vite build --ssr src/entry-server.jsx --outDir dist/server && npm run prerender",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
+    "prerender": "node scripts/prerender.mjs",
+    "seo:generate": "node scripts/generate-seo-assets.mjs",
+    "security:check": "npm run lint && npm run audit && npm run build"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -17,7 +21,6 @@
     "@mui/icons-material": "^7.3.9",
     "@mui/lab": "^7.0.1-beta.23",
     "@mui/material": "^7.3.9",
-    "emailjs-com": "^3.2.0",
     "framer-motion": "^12.35.0",
     "gsap": "^3.14.2",
     "lucide-react": "^0.577.0",

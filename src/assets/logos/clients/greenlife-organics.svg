@@ -1,0 +1,8 @@
+<svg width="240" height="96" viewBox="0 0 240 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="96" rx="24" fill="#EEF7EF"/>
+  <rect x="18" y="18" width="60" height="60" rx="20" fill="#5BAE6E"/>
+  <path d="M48 33C57 33 63 39 63 48C63 57 57 63 48 63C39 63 33 57 33 48C33 39 39 33 48 33Z" fill="#EEF7EF"/>
+  <path d="M48 39C53 39 57 43 57 48C57 53 53 57 48 57C43 57 39 53 39 48C39 43 43 39 48 39Z" fill="#5BAE6E"/>
+  <text x="94" y="42" fill="#21422B" font-family="Georgia, serif" font-size="21" font-weight="700">GreenLife</text>
+  <text x="94" y="63" fill="#5C7462" font-family="Arial, sans-serif" font-size="12" letter-spacing="1.8">ORGANICS</text>
+</svg>

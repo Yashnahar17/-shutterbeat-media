@@ -1,0 +1,7 @@
+<svg width="240" height="96" viewBox="0 0 240 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="240" height="96" rx="24" fill="#FFF7EC"/>
+  <circle cx="48" cy="48" r="30" fill="#F28C28"/>
+  <path d="M48 31C54.5 31 60 36.5 60 43C60 51.5 50.5 60.5 48 64C45.5 60.5 36 51.5 36 43C36 36.5 41.5 31 48 31Z" fill="#FFF7EC"/>
+  <text x="90" y="42" fill="#3A2C1F" font-family="Georgia, serif" font-size="21" font-weight="700">FreshBite</text>
+  <text x="90" y="63" fill="#7A5E43" font-family="Arial, sans-serif" font-size="12" letter-spacing="1.8">RESTAURANT</text>
+</svg>

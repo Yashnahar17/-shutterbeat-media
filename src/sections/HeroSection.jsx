@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion as Motion} from 'framer-motion'
 import { ArrowRight, Play } from 'lucide-react'
 
 export default function HeroSection() {
@@ -103,98 +103,99 @@ export default function HeroSection() {
   ]
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-tertiary">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
 
       {/* Animated canvas background */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
-      {/* Dark overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-tertiary/30 via-transparent to-tertiary" />
+      {/* Soft overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white/78 via-white/48 to-white" />
 
       {/* Glowing orb */}
-      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/3 left-1/4 w-64 h-64 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/12 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/3 left-1/4 w-64 h-64 bg-secondary/12 rounded-full blur-3xl pointer-events-none" />
 
       {/* Content */}
       <div className="container-custom relative z-10 pt-32 pb-20">
-        <div className="max-w-4xl">
+        <div className="section-shell max-w-5xl px-6 py-8 sm:p-10 lg:p-12">
 
-          <motion.div
+          <Motion.div
             variants={container}
             initial="hidden"
-            animate="show">
+            animate="show"
+            className="mx-auto max-w-4xl">
 
             {/* Tag */}
-            <motion.span variants={item} className="section-tag">
+            <Motion.span variants={item} className="section-tag">
               Creative Media Agency
-            </motion.span>
+            </Motion.span>
 
             {/* Headline */}
-            <motion.h1 variants={item}
-              className="font-heading text-5xl sm:text-6xl lg:text-display text-primary mb-6 leading-tight">
+            <Motion.h1 variants={item}
+              className="font-heading text-display text-primary mb-5 sm:mb-6 max-w-4xl leading-[1.04] tracking-[-0.03em]">
               From{' '}
               <span className="text-gradient">Shutter</span>
               {' '}to the{' '}
               <span className="relative inline-block">
                 Beat
-                <motion.span
+                <Motion.span
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ delay: 0.8, duration: 0.5 }}
                   className="absolute -bottom-2 left-0 right-0 h-1 bg-secondary rounded-full origin-left" />
               </span>
-            </motion.h1>
+            </Motion.h1>
 
             {/* Subtext */}
-            <motion.p variants={item}
-              className="text-primary/60 font-body text-lg lg:text-xl max-w-2xl mb-10 leading-relaxed">
+            <Motion.p variants={item}
+              className="text-primary/72 font-body text-base sm:text-lg lg:text-[1.15rem] max-w-3xl mb-9 sm:mb-10 leading-relaxed">
               ShutterBeat Media is a one-stop solution for photography, film making,
-              music, advertising, marketing, and digital development. We transform
+              advertising, marketing, and digital development. We transform
               businesses into brands people love.
-            </motion.p>
+            </Motion.p>
 
             {/* CTA Buttons */}
-            <motion.div variants={item} className="flex flex-wrap gap-4 mb-16">
+            <Motion.div variants={item} className="flex flex-col items-start gap-4 sm:flex-row sm:items-center mb-12 sm:mb-14">
               <Link to="/contact" className="btn-primary text-base px-8 py-4">
                 Start a Project
                 <ArrowRight size={18} />
               </Link>
-              <Link to="/services/photography"
-                className="flex items-center gap-3 text-primary/80 hover:text-primary transition-colors group">
-                <span className="w-12 h-12 rounded-full border border-primary/20 flex items-center justify-center group-hover:border-secondary group-hover:text-secondary transition-all duration-300">
+              <Link to="/portfolio"
+                className="inline-flex min-h-[46px] items-center gap-3 text-primary/80 hover:text-primary transition-colors group">
+                <span className="w-12 h-12 rounded-full border border-primary/16 bg-white/90 flex items-center justify-center group-hover:border-secondary group-hover:text-secondary transition-all duration-300 shadow-[0_8px_18px_rgba(72,90,168,0.1)]">
                   <Play size={16} className="ml-0.5" />
                 </span>
-                <span className="font-body font-medium">View Portfolio</span>
+                <span className="font-body text-sm sm:text-base font-semibold">View Portfolio</span>
               </Link>
-            </motion.div>
+            </Motion.div>
 
             {/* Stats Row */}
-            <motion.div variants={item}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-6 pt-8 border-t border-primary/10">
+            <Motion.div variants={item}
+              className="grid grid-cols-2 sm:grid-cols-4 gap-5 sm:gap-6 pt-7 sm:pt-8 border-t border-primary/12">
               {stats.map((stat) => (
-                <div key={stat.label}>
-                  <p className="font-heading text-3xl text-primary mb-1">{stat.value}</p>
-                  <p className="text-primary/40 text-sm font-body">{stat.label}</p>
+                <div key={stat.label} className="rounded-2xl border border-primary/8 bg-white/65 px-4 py-4 sm:px-5">
+                  <p className="font-heading text-[1.9rem] sm:text-3xl text-primary mb-1">{stat.value}</p>
+                  <p className="text-primary/62 text-sm font-body leading-snug">{stat.label}</p>
                 </div>
               ))}
-            </motion.div>
+            </Motion.div>
 
-          </motion.div>
+          </Motion.div>
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
+      <Motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
-        <span className="text-primary/30 text-xs font-body tracking-widest uppercase">Scroll</span>
-        <motion.div
+        <span className="text-primary/55 text-xs font-body tracking-widest uppercase">Scroll</span>
+        <Motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
-          className="w-px h-8 bg-gradient-to-b from-white/30 to-transparent" />
-      </motion.div>
+          className="w-px h-8 bg-gradient-to-b from-primary/35 to-transparent" />
+      </Motion.div>
 
     </section>
   )

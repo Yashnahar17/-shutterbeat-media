@@ -38,7 +38,7 @@ export const policies = [
       },
       {
         heading: '6. Data Retention',
-        body: `We retain personal data only as long as necessary for the purpose it was collected, typically 3 years for client communication records and 1 year for general enquiries. See our Data Processing & Retention policy for full details.`,
+        body: `We retain personal data only as long as necessary for the purpose it was collected, typically 3 years for client communication records, 12 months for general enquiries, and 6 months for unsuccessful career applications unless a longer retention period is legally required. See our Data Processing & Retention policy for full details.`,
       },
       {
         heading: '7. Your Rights',
@@ -104,7 +104,7 @@ export const policies = [
     slug: 'cookie-policy',
     title: 'Cookie Policy',
     badge: 'Tracking Technologies',
-    badgeColor: 'bg-tertiary/20 text-tertiary border-tertiary/30',
+    badgeColor: 'bg-white/20 text-tertiary border-tertiary/30',
     icon: 'Cookie',
     summary: 'What cookies and tracking technologies we use, why we use them, and how you can control them.',
     sections: [
@@ -182,7 +182,7 @@ export const policies = [
       },
       {
         heading: '2. Data Storage & Security',
-        body: `Data is stored on secure servers located in India and/or with reputable cloud providers (e.g. Google Workspace, AWS). We implement reasonable technical and organisational security measures including access controls, encryption in transit and regular security reviews.`,
+        body: `Data is stored on secure servers located in India and/or with reputable cloud providers. We implement technical and organisational security measures including HTTPS, access controls, encryption in transit, rate limiting on public submission endpoints, CAPTCHA verification, request logging, and regular security reviews.`,
       },
       {
         heading: '3. Data Processors',
@@ -196,6 +196,10 @@ export const policies = [
         heading: '5. Data Deletion Requests',
         body: `To request deletion of your personal data, email shutterbeat.media@gmail.com. We will action your request within 30 days, subject to legal obligations that require us to retain certain records.`,
       },
+      {
+        heading: '6. Contact & Career Form Security',
+        body: `Public contact and career forms are protected with bot-detection controls, rate limiting, request-size limits, and server-side validation. Submission metadata may be logged for abuse prevention and incident response. Resume uploads remain disabled until private object storage and malware scanning are fully configured.`,
+      },
     ],
   },
 
@@ -204,7 +208,7 @@ export const policies = [
     slug: 'accessibility',
     title: 'Accessibility Statement',
     badge: 'WCAG 2.1',
-    badgeColor: 'bg-tertiary/20 text-tertiary border-tertiary/30',
+    badgeColor: 'bg-white/20 text-tertiary border-tertiary/30',
     icon: 'Accessibility',
     summary: 'Our commitment to making this website accessible to all users, including those with disabilities.',
     sections: [
@@ -222,7 +226,7 @@ export const policies = [
       },
       {
         heading: '4. Technical Specifications',
-        body: `This website relies on HTML, CSS and JavaScript. We use semantic HTML, sufficient colour contrast, keyboard navigability and ARIA labels where appropriate.`,
+        body: `This website relies on HTML, CSS, and JavaScript. We use semantic HTML, sufficient color contrast, keyboard navigability, and ARIA labels where appropriate.`,
       },
       {
         heading: '5. Feedback & Contact',
@@ -274,11 +278,11 @@ export const policies = [
     badge: 'Job Applications',
     badgeColor: 'bg-secondary/20 text-secondary border-secondary/30',
     icon: 'UserCheck',
-    summary: 'How we handle personal data submitted through job applications and the Opportunities page.',
+    summary: 'How we handle personal data submitted through job applications and the Career page.',
     sections: [
       {
         heading: '1. What Data We Collect',
-        body: `When you apply for a role or submit your profile via our Opportunities page, we collect: your name, email address, phone number, portfolio/LinkedIn URL, CV/resume, employment type preference and any message you provide.`,
+        body: `When you apply for a role or submit your profile via our Career page, we collect: your name, email address, phone number, portfolio/LinkedIn URL, CV/resume, employment type preference, and any message you provide.`,
       },
       {
         heading: '2. How We Use It',
@@ -290,7 +294,7 @@ export const policies = [
       },
       {
         heading: '4. Retention',
-        body: `Unsuccessful applications are retained for 6 months from the date of submission, after which they are securely deleted. If you are offered and accept a role, your data is retained as part of your employment record.`,
+        body: `Unsuccessful applications are retained for 6 months from the date of submission, after which they are securely deleted. If you are offered and accept a role, your data is retained as part of your employment record. Resume uploads remain disabled until private storage and malware scanning are configured for production.`,
       },
       {
         heading: '5. Your Rights',

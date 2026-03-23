@@ -2,46 +2,29 @@ import { useState, useEffect, useRef } from 'react'
 import { AnimatePresence, motion as Motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import {
-  Camera, Film, Palette, Megaphone, Globe,
-  CalendarDays, Music2, Lightbulb, ChevronRight, Check,
+  Camera, Palette, Megaphone, Globe,
+  CalendarDays, Lightbulb, ChevronRight, Check,
 } from 'lucide-react'
+import SectionHeading from '../components/ui/SectionHeading'
 
 // ── Service data ─────────────────────────────────────────────
 const SERVICES = [
   {
-    id: 'photography',
-    label: 'Photography',
-    href: '/services/photography',
-    Icon: Camera,
-    accent: '#e879a0',
-    accentBg: 'rgba(232,121,160,0.08)',
-    accentBorder: 'rgba(232,121,160,0.25)',
-    tag: 'Visual Storytelling',
-    headline: 'Moments frozen in their most honest light.',
+    id: 'consultation',
+    label: 'Consultation',
+    href: '/services/consultation',
+    Icon: Lightbulb,
+    accent: '#4DB4C0',
+    accentBg: 'rgba(77,180,192,0.10)',
+    accentBorder: 'rgba(77,180,192,0.28)',
+    tag: 'Strategy',
+    headline: 'Clarity before creativity — always.',
     points: [
-      'Wedding & pre-wedding photography across multiple venues',
-      'Commercial, product & food photography for brands',
-      'Fashion & lifestyle shoots for e-commerce',
-      'Architectural & interior photography',
-      'Corporate headshots & team portraits',
-    ],
-  },
-  {
-    id: 'film-making',
-    label: 'Film Making',
-    href: '/services/film-making',
-    Icon: Film,
-    accent: '#a78bfa',
-    accentBg: 'rgba(167,139,250,0.08)',
-    accentBorder: 'rgba(167,139,250,0.25)',
-    tag: 'Cinematic Production',
-    headline: 'Stories that move people — literally.',
-    points: [
-      'Cinematic brand films for TV & digital platforms',
-      'Music videos with full production crew',
-      'Corporate & investor documentary films',
-      'Wedding & event videography',
-      'Short films & original creative projects',
+      'Brand strategy & positioning workshops',
+      'Go-to-market planning for new products',
+      'Social media & content strategy audits',
+      'Creative direction for in-house teams',
+      'Competitor & market landscape analysis',
     ],
   },
   {
@@ -49,9 +32,9 @@ const SERVICES = [
     label: 'Branding',
     href: '/services/branding',
     Icon: Palette,
-    accent: '#34d399',
-    accentBg: 'rgba(52,211,153,0.08)',
-    accentBorder: 'rgba(52,211,153,0.25)',
+    accent: '#485AA8',
+    accentBg: 'rgba(72,90,168,0.10)',
+    accentBorder: 'rgba(72,90,168,0.28)',
     tag: 'Identity Design',
     headline: 'Identities that outlive trends.',
     points: [
@@ -64,18 +47,18 @@ const SERVICES = [
   },
   {
     id: 'advertising',
-    label: 'Advertising',
+    label: 'Marketing and Advertising',
     href: '/services/advertising',
     Icon: Megaphone,
-    accent: '#fbbf24',
-    accentBg: 'rgba(251,191,36,0.08)',
-    accentBorder: 'rgba(251,191,36,0.25)',
+    accent: '#4DB4C0',
+    accentBg: 'rgba(77,180,192,0.10)',
+    accentBorder: 'rgba(77,180,192,0.28)',
     tag: 'Growth & Performance',
     headline: 'Campaigns that convert, not just impress.',
     points: [
       'Meta, Google & YouTube ad campaigns',
       'Out-of-home & print advertising',
-      'Performance marketing & ROAS optimisation',
+      'Performance marketing & ROAS optimization',
       'Festive & seasonal campaign planning',
       'Creative strategy & copywriting',
     ],
@@ -85,71 +68,53 @@ const SERVICES = [
     label: 'Web Development',
     href: '/services/web-development',
     Icon: Globe,
-    accent: '#38bdf8',
-    accentBg: 'rgba(56,189,248,0.08)',
-    accentBorder: 'rgba(56,189,248,0.25)',
+    accent: '#485AA8',
+    accentBg: 'rgba(72,90,168,0.10)',
+    accentBorder: 'rgba(72,90,168,0.28)',
     tag: 'Digital Presence',
     headline: 'Websites that work as hard as you do.',
     points: [
       'Custom React & Next.js websites',
       'E-commerce stores (Shopify, WooCommerce)',
-      'Landing pages optimised for conversion',
+      'Landing pages optimized for conversion',
       'CMS-based sites with easy self-editing',
       'Performance, SEO & accessibility audits',
     ],
   },
   {
+    id: 'photography',
+    label: 'Photography and Film Making',
+    href: '/services/photography',
+    Icon: Camera,
+    accent: '#485AA8',
+    accentBg: 'rgba(72,90,168,0.10)',
+    accentBorder: 'rgba(72,90,168,0.28)',
+    tag: 'Visual Storytelling',
+    headline: 'Still frames and moving stories under one roof.',
+    points: [
+      'Wedding & pre-wedding photography across multiple venues',
+      'Commercial, product & food photography for brands',
+      'Brand films, campaign films and documentaries',
+      'Event videography and highlight reels',
+      'Fashion, lifestyle and portrait shoots',
+    ],
+  },
+  {
     id: 'events',
-    label: 'Events',
+    label: 'Event and Artist Management',
     href: '/services/events',
     Icon: CalendarDays,
-    accent: '#f472b6',
-    accentBg: 'rgba(244,114,182,0.08)',
-    accentBorder: 'rgba(244,114,182,0.25)',
+    accent: '#4DB4C0',
+    accentBg: 'rgba(77,180,192,0.10)',
+    accentBorder: 'rgba(77,180,192,0.28)',
     tag: 'Live Experiences',
-    headline: 'Events that attendees actually remember.',
+    headline: 'Events and artist experiences that leave a mark.',
     points: [
       'Weddings, receptions & mehendi functions',
       'Corporate summits & product launches',
-      'Music festivals & cultural events',
+      'Cultural festivals & public events',
       'Brand activations & pop-up experiences',
       'Full A/V production & stage management',
-    ],
-  },
-  {
-    id: 'music',
-    label: 'Music',
-    href: '/services/music',
-    Icon: Music2,
-    accent: '#c084fc',
-    accentBg: 'rgba(192,132,252,0.08)',
-    accentBorder: 'rgba(192,132,252,0.25)',
-    tag: 'Audio Production',
-    headline: 'Sound that sets the mood before a word is spoken.',
-    points: [
-      'Original brand jingles & audio identities',
-      'Background scores for films & ads',
-      'Music production & studio recording',
-      'Artist management & music promotion',
-      'Podcast production & editing',
-    ],
-  },
-  {
-    id: 'consultation',
-    label: 'Consultation',
-    href: '/services/consultation',
-    Icon: Lightbulb,
-    accent: '#86efac',
-    accentBg: 'rgba(134,239,172,0.08)',
-    accentBorder: 'rgba(134,239,172,0.25)',
-    tag: 'Strategy',
-    headline: 'Clarity before creativity — always.',
-    points: [
-      'Brand strategy & positioning workshops',
-      'Go-to-market planning for new products',
-      'Social media & content strategy audits',
-      'Creative direction for in-house teams',
-      'Competitor & market landscape analysis',
     ],
   },
 ]
@@ -183,7 +148,7 @@ export default function WhatWeDo() {
   }
 
   return (
-    <section className="section-padding bg-tertiary">
+    <section className="section-padding bg-white">
       <div className="container-custom">
 
         {/* ── Header ───────────────────────────────── */}
@@ -192,16 +157,15 @@ export default function WhatWeDo() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="mb-14"
+          className="mb-12 sm:mb-14"
         >
-          <span className="section-tag">What We Do</span>
-          <h2 className="font-heading text-h2 text-primary mb-4">
-            Our <span className="text-gradient">Services</span>
-          </h2>
-          <p className="text-primary/40 font-body text-lg max-w-lg leading-relaxed">
-            From shutter to the beat — we cover every creative and digital need your
-            business could have, all under one roof.
-          </p>
+          <SectionHeading
+            tag="What We Do"
+            title="Our"
+            accent="Services"
+            description="From shutter to the beat, we cover every creative and digital need your business could have, all under one roof."
+            className="max-w-xl"
+          />
         </Motion.div>
 
         {/* ── Main panel ───────────────────────────── */}
@@ -210,12 +174,12 @@ export default function WhatWeDo() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.15 }}
-          className="grid grid-cols-1 lg:grid-cols-[260px_1fr] rounded-2xl overflow-hidden border border-primary/10"
+          className="grid grid-cols-1 lg:grid-cols-[280px_1fr] rounded-[1.75rem] overflow-hidden border border-primary/10 bg-white shadow-[0_16px_36px_rgba(72,90,168,0.08)]"
           style={{ background: 'rgba(72,90,168,0.02)' }}
         >
 
           {/* ── LEFT: Tab list ──────────────────────── */}
-          <div className="bg-[#F4E8DC] border-b lg:border-b-0 lg:border-r border-primary/10">
+          <div className="bg-white border-b lg:border-b-0 lg:border-r border-primary/10">
             {/* Mobile: horizontal scroll tabs */}
             <div className="flex lg:hidden overflow-x-auto scrollbar-none p-3 gap-2">
               {SERVICES.map((s, i) => {
@@ -224,11 +188,11 @@ export default function WhatWeDo() {
                   <button
                     key={s.id}
                     onClick={() => handleTabClick(i)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl font-body text-sm whitespace-nowrap transition-all duration-200 border shrink-0"
+                    className="flex min-h-[44px] items-center gap-2 px-3.5 py-2.5 rounded-xl font-body text-sm whitespace-nowrap transition-all duration-200 border shrink-0"
                     style={{
                       background: isActive ? `${s.accentBg}` : 'transparent',
                       borderColor: isActive ? s.accentBorder : 'rgba(72,90,168,0.08)',
-                      color: isActive ? s.accent : 'rgba(72,90,168,0.35)',
+                      color: isActive ? s.accent : 'rgba(72,90,168,0.6)',
                       fontWeight: isActive ? 600 : 400,
                     }}
                   >
@@ -247,7 +211,7 @@ export default function WhatWeDo() {
                   <button
                     key={s.id}
                     onClick={() => handleTabClick(i)}
-                    className="relative w-full flex items-center gap-3 px-5 py-3.5 text-left transition-all duration-200 group"
+                    className="relative min-h-[52px] w-full flex items-center gap-3 px-5 py-3.5 text-left transition-all duration-200 group"
                     style={{
                       background: isActive ? 'rgba(72,90,168,0.03)' : 'transparent',
                       borderLeft: `3px solid ${isActive ? s.accent : 'transparent'}`,
@@ -271,7 +235,7 @@ export default function WhatWeDo() {
                     <span
                       className="font-body text-sm transition-all duration-200"
                       style={{
-                        color: isActive ? '#EDD9C4' : 'rgba(72,90,168,0.35)',
+                        color: isActive ? '#2F3F82' : 'rgba(72,90,168,0.62)',
                         fontWeight: isActive ? 600 : 400,
                       }}
                     >
@@ -296,7 +260,7 @@ export default function WhatWeDo() {
           </div>
 
           {/* ── RIGHT: Detail panel ─────────────────── */}
-          <div className="bg-tertiary relative overflow-hidden">
+          <div className="bg-white relative overflow-hidden">
             {/* Subtle accent glow in corner */}
             <div
               className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl pointer-events-none transition-all duration-700"
@@ -310,7 +274,7 @@ export default function WhatWeDo() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
                 transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-                className="relative z-10 p-8 lg:p-12 flex flex-col h-full"
+                className="relative z-10 flex h-full flex-col p-6 sm:p-8 lg:p-12"
               >
                 {/* Tag pill */}
                 <div
@@ -330,7 +294,7 @@ export default function WhatWeDo() {
                 </div>
 
                 {/* Headline */}
-                <h3 className="font-heading text-primary text-2xl lg:text-3xl leading-snug mb-6 max-w-lg" style={{ letterSpacing: '-0.02em' }}>
+                <h3 className="font-heading text-primary text-[1.75rem] lg:text-3xl leading-[1.18] mb-6 max-w-xl" style={{ letterSpacing: '-0.02em' }}>
                   {service.headline}
                 </h3>
 
@@ -341,15 +305,15 @@ export default function WhatWeDo() {
                 />
 
                 {/* Points */}
-                <ul className="flex flex-col gap-4 mb-9">
+                <ul className="flex flex-col gap-4 mb-8 sm:mb-9">
                   {service.points.map((pt, i) => (
                     <Motion.li
                       key={pt}
                       initial={{ opacity: 0, x: 10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.07, duration: 0.3 }}
-                      className="flex items-start gap-3 font-body text-sm leading-relaxed"
-                      style={{ color: 'rgba(72,90,168,0.60)' }}
+                      className="flex items-start gap-3 font-body text-sm sm:text-[15px] leading-relaxed"
+                      style={{ color: 'rgba(72,90,168,0.72)' }}
                     >
                       <span
                         className="w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5"
@@ -366,7 +330,7 @@ export default function WhatWeDo() {
                 <div className="mt-auto">
                   <Link
                     to={service.href}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-body text-sm font-semibold transition-all duration-200 group"
+                    className="inline-flex min-h-[46px] items-center gap-2 px-5 py-2.5 rounded-xl font-body text-sm font-semibold transition-all duration-200 group"
                     style={{
                       background: service.accentBg,
                       border: `1px solid ${service.accentBorder}`,
@@ -386,6 +350,7 @@ export default function WhatWeDo() {
                     <button
                       key={s.id}
                       onClick={() => handleTabClick(i)}
+                      aria-label={`Show ${s.label}`}
                       className="h-1.5 rounded-full transition-all duration-300 cursor-pointer border-0 p-0"
                       style={{
                         width: i === activeIdx ? 20 : 6,
@@ -410,7 +375,7 @@ export default function WhatWeDo() {
         >
           <Link
             to="/services"
-            className="inline-flex items-center gap-2 text-primary/30 hover:text-primary font-body text-sm transition-colors duration-200 group"
+            className="inline-flex items-center gap-2 text-primary/55 hover:text-primary font-body text-sm transition-colors duration-200 group"
           >
             View all services
             <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />

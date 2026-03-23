@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion as Motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import {
-  ArrowRight, Linkedin, Mail, Award,
+  ArrowRight, Linkedin, Mail,
   Eye, Target, Heart, Zap, Users, Star, ExternalLink
 } from 'lucide-react'
 import { aboutData } from '../data/about'
 import { team } from '../data/team'
-import { awards } from '../data/awards'
 import { clients } from '../data/clients'
+import SafeImage from '../components/shared/SafeImage'
+import SectionHeading from '../components/ui/SectionHeading'
 
 // ── TABS DATA ─────────────────────────────────────────────────
 const tabs = [
@@ -18,7 +19,7 @@ const tabs = [
     icon: Users,
     content: {
       heading: 'Who We Are',
-      body: `ShutterBeat Media is a one-stop shop for all your media needs. Right from photography, film making, music, advertising and marketing to website development, application development, visual effects and much more! Just like our name implies, we offer you everything "From SHUTTER to the BEAT". We aim to make your business a brand that people will love working with.`,
+      body: `ShutterBeat Media is a one-stop shop for all your media needs. From photography, film making, advertising, and marketing to website development, application development, visual effects, and more, we bring every creative discipline under one roof. Just like our name implies, we offer you everything "From SHUTTER to the BEAT". We aim to help turn your business into a brand people love working with.`,
       highlights: ['Founded in Pune, India', 'Cross-industry expertise', '200+ projects delivered', 'Pan-India reach'],
     },
   },
@@ -29,7 +30,7 @@ const tabs = [
     content: {
       heading: 'What We Do',
       body: `We cover the full spectrum of creative and digital services. From capturing stunning photographs and producing cinematic films to building powerful websites and running result-driven marketing campaigns — we do it all under one roof so your brand never has to look elsewhere.`,
-      highlights: ['Photography & Videography', 'Music & Artist Management', 'Advertising & Marketing', 'Web & App Development'],
+      highlights: ['Consultation', 'Branding', 'Marketing & Advertising', 'Web Development', 'Photography & Film Making', 'Event & Artist Management'],
     },
   },
   {
@@ -45,11 +46,27 @@ const tabs = [
 ]
 
 // ── AVATAR COMPONENT ──────────────────────────────────────────
-function Avatar({ name, size = 'lg' }) {
+function Avatar({ name, image, size = 'lg' }) {
   const initials = name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
-  const colors   = ['bg-primary', 'bg-secondary', 'bg-primary-light', 'bg-[#D7C2AD]']
+  const colors   = ['bg-primary', 'bg-secondary', 'bg-primary-light', 'bg-[#EDD9C4]']
   const color    = colors[name.charCodeAt(0) % colors.length]
   const sizeClass = size === 'lg' ? 'w-full h-52 text-5xl' : 'w-12 h-12 text-lg'
+  if (image) {
+    return (
+      <SafeImage
+        src={image}
+        alt={name}
+        loading="lazy"
+        decoding="async"
+        className={`${sizeClass} object-cover`}
+        fallback={
+          <div className={`${sizeClass} ${color} flex items-center justify-center font-heading font-bold text-primary/80`}>
+            {initials}
+          </div>
+        }
+      />
+    )
+  }
   return (
     <div className={`${sizeClass} ${color} flex items-center justify-center font-heading font-bold text-primary/80`}>
       {initials}
@@ -62,14 +79,14 @@ export default function About() {
   const current = tabs.find(t => t.id === activeTab)
 
   return (
-    <div className="bg-tertiary min-h-screen">
+    <div className="bg-white min-h-screen">
 
       {/* ── HERO BANNER ────────────────────────────────────────── */}
       <section className="relative min-h-[60vh] flex items-end pb-20 overflow-hidden">
 
         {/* Animated gradient background */}
-        <div className="absolute inset-0 bg-[#F4E8DC]" />
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-[#F4E8DC] to-secondary/10" />
+        <div className="absolute inset-0 bg-white" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-white to-secondary/10" />
 
         {/* Grid pattern overlay */}
         <div className="absolute inset-0 opacity-5"
@@ -80,50 +97,51 @@ export default function About() {
         <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-secondary/15 rounded-full blur-3xl" />
 
         {/* Floating stat cards */}
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
           className="absolute top-32 right-12 hidden lg:block">
-          <div className="bg-[#F4E8DC]/80 backdrop-blur border border-[#D7C2AD] rounded-2xl p-4 text-center">
+          <div className="bg-white/90 backdrop-blur border border-tertiary rounded-2xl p-4 text-center">
             <p className="font-heading text-3xl text-secondary">200+</p>
-            <p className="text-primary/40 text-xs font-body">Projects Done</p>
+            <p className="text-primary/60 text-xs font-body">Projects Done</p>
           </div>
-        </motion.div>
-        <motion.div
+        </Motion.div>
+        <Motion.div
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1 }}
           className="absolute top-56 right-32 hidden lg:block">
-          <div className="bg-[#F4E8DC]/80 backdrop-blur border border-[#D7C2AD] rounded-2xl p-4 text-center">
+          <div className="bg-white/90 backdrop-blur border border-tertiary rounded-2xl p-4 text-center">
             <p className="font-heading text-3xl text-primary">50+</p>
-            <p className="text-primary/40 text-xs font-body">Happy Clients</p>
+            <p className="text-primary/60 text-xs font-body">Happy Clients</p>
           </div>
-        </motion.div>
+        </Motion.div>
 
-        <div className="container-custom relative z-10 pt-40">
-          <motion.div
+        <div className="container-custom relative z-10 pt-32 sm:pt-40">
+          <Motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}>
+            transition={{ duration: 0.8 }}
+            className="section-shell max-w-4xl px-6 py-8 sm:p-10">
             <span className="section-tag">Our Story</span>
-            <h1 className="font-heading text-display text-primary mb-6 max-w-3xl leading-tight">
+            <h1 className="font-heading text-display text-primary mb-6 max-w-3xl leading-[1.04]" style={{ letterSpacing: '-0.025em' }}>
               We Are a{' '}
               <span className="text-gradient">Creative</span>{' '}
               Media Agency
             </h1>
-            <p className="text-primary/50 font-body text-xl max-w-2xl leading-relaxed">
+            <p className="text-primary/74 font-body text-base sm:text-lg lg:text-[1.1rem] max-w-2xl leading-relaxed">
               From Shutter to the Beat — transforming ideas into brands, stories into films, and businesses into icons.
             </p>
-          </motion.div>
+          </Motion.div>
         </div>
       </section>
 
       {/* ── TABBED COMPANY INFO ────────────────────────────────── */}
-      <section className="section-padding bg-tertiary">
+      <section className="section-padding bg-white">
         <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-16 items-start">
+          <div className="grid lg:grid-cols-[minmax(0,360px)_1fr] gap-8 lg:gap-12 items-start">
 
             {/* Left — Tab buttons */}
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -137,17 +155,17 @@ export default function About() {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex items-center gap-4 px-6 py-4 rounded-xl text-left transition-all duration-300 border ${
+                      className={`flex items-center gap-3 sm:gap-4 px-4 sm:px-5 py-3.5 sm:py-4 rounded-2xl text-left transition-all duration-300 border min-h-[48px] shadow-[0_8px_20px_rgba(72,90,168,0.04)] ${
                         activeTab === tab.id
                           ? 'bg-primary/10 border-primary/40 text-primary'
-                          : 'bg-[#F4E8DC] border-[#D7C2AD] text-primary/50 hover:border-[#D7C2AD] hover:text-primary/70'
+                          : 'bg-white border-primary/10 text-primary/72 hover:border-primary/18 hover:text-primary'
                       }`}>
                       <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
-                        activeTab === tab.id ? 'bg-primary/20' : 'bg-[#E8D4BF]'
+                        activeTab === tab.id ? 'bg-primary/20' : 'bg-tertiary/60'
                       }`}>
-                        <Icon size={16} className={activeTab === tab.id ? 'text-secondary' : 'text-primary/40'} />
+                        <Icon size={16} className={activeTab === tab.id ? 'text-secondary' : 'text-primary/60'} />
                       </div>
-                      <span className="font-heading text-sm">{tab.label}</span>
+                      <span className="font-heading text-sm sm:text-[15px]">{tab.label}</span>
                       {activeTab === tab.id && (
                         <div className="ml-auto w-1.5 h-1.5 rounded-full bg-secondary" />
                       )}
@@ -159,71 +177,74 @@ export default function About() {
               <Link to="/contact" className="btn-primary">
                 Start a Project <ArrowRight size={16} />
               </Link>
-            </motion.div>
+            </Motion.div>
 
             {/* Right — Tab content */}
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}>
               <AnimatePresence mode="wait">
-                <motion.div
+                <Motion.div
                   key={activeTab}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.35 }}
-                  className="bg-[#F4E8DC] border border-[#D7C2AD] rounded-card p-8">
+                  className="section-shell p-6 sm:p-8">
 
                   <h2 className="font-heading text-h3 text-primary mb-4">
                     {current.content.heading}
                   </h2>
-                  <p className="text-primary/60 font-body text-base leading-relaxed mb-8">
+                  <p className="text-primary/72 font-body text-sm sm:text-base leading-relaxed mb-8">
                     {current.content.body}
                   </p>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid sm:grid-cols-2 gap-3">
                     {current.content.highlights.map((h, i) => (
-                      <div key={i} className="flex items-center gap-2">
+                      <div key={i} className="flex items-center gap-2 rounded-xl bg-primary/[0.02] px-3 py-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
-                        <span className="text-primary/60 font-body text-sm">{h}</span>
+                        <span className="text-primary/68 font-body text-sm leading-snug">{h}</span>
                       </div>
                     ))}
                   </div>
-                </motion.div>
+                </Motion.div>
               </AnimatePresence>
-            </motion.div>
+            </Motion.div>
 
           </div>
         </div>
       </section>
 
       {/* ── VISION & MISSION ───────────────────────────────────── */}
-      <section className="section-padding bg-[#F4E8DC] border-y border-[#D7C2AD] relative overflow-hidden">
+      <section className="section-padding bg-white border-y border-tertiary relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-secondary/5" />
         <div className="container-custom relative z-10">
 
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-14">
-            <span className="section-tag">Purpose</span>
-            <h2 className="font-heading text-h2 text-primary">
-              Vision & <span className="text-gradient">Mission</span>
-            </h2>
-          </motion.div>
+            className="mb-12 sm:mb-14">
+            <SectionHeading
+              tag="Purpose"
+              title="Vision &"
+              accent="Mission"
+              align="center"
+              className="max-w-2xl"
+            />
+          </Motion.div>
 
           <div className="grid lg:grid-cols-2 gap-8">
 
             {/* Vision */}
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="relative bg-tertiary border border-primary/20 rounded-card p-8 overflow-hidden group hover:border-primary/40 transition-all duration-300">
+              className="relative section-shell overflow-hidden p-6 sm:p-8 group hover:border-primary/30 transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-2xl" />
               <div className="flex items-start gap-5">
                 <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
@@ -234,20 +255,20 @@ export default function About() {
                     <span className="text-primary font-body text-xs tracking-widest uppercase font-semibold">Our Vision</span>
                   </div>
                   <h3 className="font-heading text-primary text-xl mb-4">Where We're Headed</h3>
-                  <p className="text-primary/60 font-body text-sm leading-relaxed">
+                  <p className="text-primary/72 font-body text-sm leading-relaxed">
                     {aboutData.vision.description}
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </Motion.div>
 
             {/* Mission */}
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="relative bg-tertiary border border-secondary/20 rounded-card p-8 overflow-hidden group hover:border-secondary/40 transition-all duration-300">
+              className="relative section-shell overflow-hidden p-6 sm:p-8 group hover:border-secondary/30 transition-all duration-300">
               <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full blur-2xl" />
               <div className="flex items-start gap-5">
                 <div className="w-14 h-14 rounded-2xl bg-secondary/10 border border-secondary/20 flex items-center justify-center shrink-0">
@@ -258,12 +279,12 @@ export default function About() {
                     <span className="text-secondary font-body text-xs tracking-widest uppercase font-semibold">Our Mission</span>
                   </div>
                   <h3 className="font-heading text-primary text-xl mb-4">Why We Exist</h3>
-                  <p className="text-primary/60 font-body text-sm leading-relaxed">
+                  <p className="text-primary/72 font-body text-sm leading-relaxed">
                     {aboutData.mission.description}
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </Motion.div>
 
           </div>
 
@@ -275,144 +296,106 @@ export default function About() {
               { icon: Users,  label: 'Collaboration', color: 'text-tertiary'  },
               { icon: Zap,    label: 'Innovation',    color: 'text-primary'   },
             ].map((v, i) => (
-              <motion.div
+              <Motion.div
                 key={v.label}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="card text-center p-6 hover:border-primary/30">
+                className="card text-center p-5 sm:p-6 hover:border-primary/30">
                 <v.icon size={22} className={`${v.color} mx-auto mb-3`} />
-                <p className="font-heading text-primary text-sm">{v.label}</p>
-              </motion.div>
+                <p className="font-heading text-primary text-sm sm:text-[15px]">{v.label}</p>
+              </Motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── TEAM ───────────────────────────────────────────────── */}
-      <section className="section-padding bg-tertiary">
+      <section className="section-padding bg-white">
         <div className="container-custom">
 
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-14">
-            <span className="section-tag">Our People</span>
-            <h2 className="font-heading text-h2 text-primary mb-4">
-              Meet the <span className="text-gradient">Team</span>
-            </h2>
-            <p className="text-primary/50 font-body max-w-xl mx-auto">
-              A passionate group of creatives, strategists and storytellers.
-            </p>
-          </motion.div>
+            className="mb-12 sm:mb-14">
+            <SectionHeading
+              tag="Our People"
+              title="Meet the"
+              accent="Team"
+              description="A passionate group of creatives, strategists and storytellers."
+              align="center"
+              className="max-w-2xl"
+            />
+          </Motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {team.map((member, i) => (
-              <motion.div
+              <Motion.div
                 key={member.id}
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.12 }}
-                className="group bg-[#F4E8DC] border border-[#D7C2AD] rounded-card overflow-hidden hover:border-primary/30 hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300">
+                className="group bg-white border border-primary/12 rounded-card overflow-hidden hover:border-primary/24 hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300">
 
                 {/* Photo / Avatar */}
                 <div className="relative overflow-hidden">
-                  <Avatar name={member.name} />
+                    <Avatar name={member.name} image={member.image} />
                   {/* Overlay on hover */}
-                  <div className="absolute inset-0 bg-tertiary/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
+                  <div className="absolute inset-0 bg-white/72 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3">
                     <a href={member.linkedin}
-                      className="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-tertiary hover:bg-primary-light transition-colors">
+                      className="w-11 h-11 rounded-full bg-primary flex items-center justify-center text-tertiary hover:bg-primary-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2">
                       <Linkedin size={14} />
                     </a>
                     <a href={`mailto:${member.email || 'shutterbeat.media@gmail.com'}`}
-                      className="w-9 h-9 rounded-full bg-secondary flex items-center justify-center text-primary hover:bg-secondary-light transition-colors">
+                      className="w-11 h-11 rounded-full bg-secondary flex items-center justify-center text-primary hover:bg-secondary-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/30 focus-visible:ring-offset-2">
                       <Mail size={14} />
                     </a>
                   </div>
                 </div>
 
                 {/* Info */}
-                <div className="p-5">
-                  <h3 className="font-heading text-primary text-base mb-1">{member.name}</h3>
+                <div className="p-5 sm:p-6">
+                  <h3 className="font-heading text-primary text-base sm:text-[1.05rem] mb-1">{member.name}</h3>
                   <p className="text-secondary text-xs font-body font-semibold mb-1">{member.role}</p>
-                  <p className="text-primary/30 text-xs font-body mb-3">{member.experience} experience</p>
-                  <p className="text-primary/50 text-sm font-body leading-relaxed mb-4 border-t border-[#D7C2AD] pt-3">
+                  <p className="text-primary/58 text-xs font-body mb-3">{member.experience} experience</p>
+                  <p className="text-primary/68 text-sm font-body leading-relaxed mb-4 border-t border-tertiary pt-3">
                     {member.bio}
                   </p>
                   <a href={member.linkedin}
-                    className="inline-flex items-center gap-2 text-primary/30 hover:text-secondary text-xs font-body transition-colors">
+                    className="inline-flex min-h-[40px] items-center gap-2 text-primary/62 hover:text-secondary text-xs font-body transition-colors">
                     <Linkedin size={12} /> Connect on LinkedIn
                   </a>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── AWARDS & RECOGNITIONS ──────────────────────────────── */}
-      <section className="section-padding bg-[#F4E8DC] border-y border-[#D7C2AD]">
-        <div className="container-custom">
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-14">
-            <span className="section-tag">Achievements</span>
-            <h2 className="font-heading text-h2 text-primary">
-              Awards & <span className="text-gradient">Recognitions</span>
-            </h2>
-          </motion.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {awards.map((award, i) => (
-              <motion.div
-                key={award.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="card flex items-start gap-5 hover:border-tertiary/30 group">
-                <div className="w-14 h-14 rounded-2xl bg-tertiary/10 border border-tertiary/20 flex items-center justify-center shrink-0 group-hover:bg-tertiary/20 transition-colors">
-                  <Award size={24} className="text-tertiary" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-tertiary text-xs font-body font-semibold">{award.year}</span>
-                    <span className="w-1 h-1 rounded-full bg-white/20" />
-                    <span className="text-primary/30 text-xs font-body">{award.organization}</span>
-                  </div>
-                  <h3 className="font-heading text-primary text-base mb-2">{award.title}</h3>
-                  <p className="text-primary/50 font-body text-sm">{award.description}</p>
-                </div>
-              </motion.div>
+              </Motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── SISTER CONCERNS / PARTNERS ─────────────────────────── */}
-      <section className="section-padding bg-tertiary">
+      <section className="section-padding bg-white">
         <div className="container-custom">
 
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-14">
-            <span className="section-tag">Network</span>
-            <h2 className="font-heading text-h2 text-primary">
-              Sister Concerns & <span className="text-gradient">Partners</span>
-            </h2>
-          </motion.div>
+            className="mb-12 sm:mb-14">
+            <SectionHeading
+              tag="Network"
+              title="Sister Concerns &"
+              accent="Partners"
+              align="center"
+              className="max-w-2xl"
+            />
+          </Motion.div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {clients.map((client, i) => (
-              <motion.a
+              <Motion.a
                 key={client.id}
                 href={client.website}
                 target="_blank"
@@ -421,39 +404,50 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.07 }}
-                className="group flex flex-col items-center gap-3 p-5 bg-[#F4E8DC] border border-[#D7C2AD] rounded-card hover:border-secondary/30 hover:-translate-y-1 transition-all duration-300">
-                <div className="w-12 h-12 rounded-xl bg-[#E8D4BF] border border-[#D7C2AD] flex items-center justify-center group-hover:border-secondary/30 transition-colors">
-                  <span className="font-heading text-primary/40 text-sm font-bold">
-                    {client.name.slice(0, 2).toUpperCase()}
-                  </span>
-                </div>
-                <p className="font-heading text-primary/60 text-xs text-center group-hover:text-primary transition-colors">
+                className="group flex min-h-[132px] flex-col items-center justify-center gap-3 p-5 bg-white border border-primary/10 rounded-card shadow-[0_8px_22px_rgba(72,90,168,0.05)] hover:border-secondary/24 hover:-translate-y-1 hover:shadow-[0_16px_34px_rgba(72,90,168,0.1)] transition-all duration-300">
+                {client.logo ? (
+                  <img
+                    src={client.logo}
+                    alt={`${client.name} logo`}
+                    loading="lazy"
+                    decoding="async"
+                    className="h-10 w-auto max-w-[110px] object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-xl bg-tertiary/60 border border-tertiary flex items-center justify-center group-hover:border-secondary/30 transition-colors">
+                    <span className="font-heading text-primary/60 text-sm font-bold">
+                      {client.name.slice(0, 2).toUpperCase()}
+                    </span>
+                  </div>
+                )}
+                <p className="font-heading text-primary/62 text-xs text-center group-hover:text-primary transition-colors leading-snug">
                   {client.name}
                 </p>
                 <ExternalLink size={10} className="text-primary/20 group-hover:text-secondary transition-colors" />
-              </motion.a>
+              </Motion.a>
             ))}
           </div>
         </div>
       </section>
 
       {/* ── CTA ────────────────────────────────────────────────── */}
-      <section className="section-padding bg-[#F4E8DC] border-t border-[#D7C2AD]">
-        <div className="container-custom text-center">
-          <motion.div
+      <section className="section-padding bg-white border-t border-tertiary">
+        <div className="container-custom">
+          <Motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}>
+            viewport={{ once: true }}
+            className="section-shell mx-auto max-w-4xl px-6 py-10 sm:px-10 sm:py-12 text-center">
             <h2 className="font-heading text-h2 text-primary mb-4">
               Ready to <span className="text-gradient">Work Together?</span>
             </h2>
-            <p className="text-primary/50 font-body mb-8 max-w-lg mx-auto">
+            <p className="text-primary/72 font-body mb-8 max-w-lg mx-auto leading-relaxed">
               Let's turn your vision into something remarkable.
             </p>
             <Link to="/contact" className="btn-primary text-base px-8 py-4">
               Get In Touch <ArrowRight size={18} />
             </Link>
-          </motion.div>
+          </Motion.div>
         </div>
       </section>
 

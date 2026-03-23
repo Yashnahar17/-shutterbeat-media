@@ -1,68 +1,52 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion as Motion, AnimatePresence } from 'framer-motion'
 import {
-  Camera, Film, Palette, Megaphone, Globe,
-  CalendarDays, Music2, Lightbulb,
-  ArrowRight, Check, Star, ChevronRight, Zap,
+  Camera,
+  Palette,
+  Megaphone,
+  Globe,
+  CalendarDays,
+  Lightbulb,
+  ArrowRight,
+  Check,
+  Star,
+  ChevronRight,
+  Zap,
+  X,
 } from 'lucide-react'
+import SectionHeading from '../components/ui/SectionHeading'
 
-// ── Service definitions ───────────────────────────────────────
 const SERVICES = [
   {
-    id: 'photography',
-    title: 'Photography',
-    href: '/services/photography',
-    Icon: Camera,
-    accent: '#e879a0',
-    accentBg: 'rgba(232,121,160,0.08)',
-    accentBorder: 'rgba(232,121,160,0.22)',
-    category: 'Visual',
-    tagline: 'Moments frozen in their most honest light.',
+    id: 'consultation',
+    title: 'Consultation',
+    href: '/services/consultation',
+    Icon: Lightbulb,
+    tone: 'primary',
+    category: 'Strategy',
+    tagline: 'Clarity before creativity.',
     description:
-      'From cinematic wedding coverage to razor-sharp product photography, we turn real moments into images that stop the scroll and tell your story.',
+      'Strategic advisory for positioning, go-to-market planning and creative direction that aligns teams around outcomes.',
     highlights: [
-      'Wedding & pre-wedding photography',
-      'Commercial & product photography',
-      'Fashion & lifestyle shoots',
-      'Architectural & interior photography',
-      'Corporate headshots & portraits',
+      'Brand strategy & positioning',
+      'Go-to-market planning',
+      'Social media & content audits',
+      'Creative direction for teams',
+      'Market & competitor analysis',
     ],
-    stat: { value: '500+', label: 'Shoots delivered' },
-  },
-  {
-    id: 'film-making',
-    title: 'Film Making',
-    href: '/services/film-making',
-    Icon: Film,
-    accent: '#a78bfa',
-    accentBg: 'rgba(167,139,250,0.08)',
-    accentBorder: 'rgba(167,139,250,0.22)',
-    category: 'Visual',
-    tagline: 'Stories that move people — literally.',
-    description:
-      'Cinematic brand films, music videos and corporate documentaries crafted with full production — from concept to final cut, every frame intentional.',
-    highlights: [
-      'Brand films for TV & digital',
-      'Music videos — full crew production',
-      'Corporate & investor documentaries',
-      'Wedding & event videography',
-      'Short films & original content',
-    ],
-    stat: { value: '200+', label: 'Films produced' },
+    stat: { value: '50+', label: 'Strategies delivered' },
   },
   {
     id: 'branding',
     title: 'Branding',
     href: '/services/branding',
     Icon: Palette,
-    accent: '#34d399',
-    accentBg: 'rgba(52,211,153,0.08)',
-    accentBorder: 'rgba(52,211,153,0.22)',
-    category: 'Strategy',
+    tone: 'tertiary',
+    category: 'Brand',
     tagline: 'Identities that outlive trends.',
     description:
-      'We build brand systems that scale — from the first logo sketch to complete guidelines, packaging and digital kits that make your brand unmistakable.',
+      'We build brand systems that scale, from logo foundations to complete guidelines and rollout-ready visual kits.',
     highlights: [
       'Logo & full visual identity',
       'Brand guidelines & style docs',
@@ -74,20 +58,18 @@ const SERVICES = [
   },
   {
     id: 'advertising',
-    title: 'Advertising',
+    title: 'Marketing and Advertising',
     href: '/services/advertising',
     Icon: Megaphone,
-    accent: '#fbbf24',
-    accentBg: 'rgba(251,191,36,0.08)',
-    accentBorder: 'rgba(251,191,36,0.22)',
+    tone: 'secondary',
     category: 'Growth',
     tagline: 'Campaigns that convert, not just impress.',
     description:
-      'Performance-driven campaigns across Meta, Google, YouTube and OOH — backed by creative strategy and relentless optimisation for real business results.',
+      'Performance-driven marketing and advertising campaigns across Meta, Google, YouTube and OOH, guided by strategy and rapid creative iteration.',
     highlights: [
       'Meta, Google & YouTube ads',
       'Out-of-home & print advertising',
-      'Performance marketing & ROAS optim.',
+      'Performance marketing optimization',
       'Festive & seasonal campaign planning',
       'Creative strategy & copywriting',
     ],
@@ -98,94 +80,83 @@ const SERVICES = [
     title: 'Web Development',
     href: '/services/web-development',
     Icon: Globe,
-    accent: '#38bdf8',
-    accentBg: 'rgba(56,189,248,0.08)',
-    accentBorder: 'rgba(56,189,248,0.22)',
+    tone: 'primary',
     category: 'Digital',
     tagline: 'Websites that work as hard as you do.',
     description:
-      'Custom React websites, e-commerce stores and LMS portals engineered for speed, SEO and conversions — not just aesthetics.',
+      'Custom React websites, e-commerce stores and portals engineered for speed, SEO and conversion outcomes.',
     highlights: [
       'Custom React & Next.js websites',
       'E-commerce (Shopify, WooCommerce)',
-      'Conversion-optimised landing pages',
+      'Conversion-optimized landing pages',
       'CMS sites with easy self-editing',
       'Performance & SEO audits',
     ],
     stat: { value: '80+', label: 'Sites launched' },
   },
   {
+    id: 'photography',
+    title: 'Photography and Film Making',
+    href: '/services/photography',
+    Icon: Camera,
+    tone: 'secondary',
+    category: 'Visual',
+    tagline: 'Stills and motion, crafted with equal intent.',
+    description:
+      'From cinematic wedding coverage and razor-sharp product photography to brand films and documentaries, we shape visuals that stop the scroll and stay memorable.',
+    highlights: [
+      'Wedding & pre-wedding photography',
+      'Brand films & campaign films',
+      'Commercial & product photography',
+      'Event videography & documentaries',
+      'Fashion, lifestyle & portrait shoots',
+    ],
+    stat: { value: '700+', label: 'Visual projects delivered' },
+  },
+  {
     id: 'events',
-    title: 'Events',
+    title: 'Event and Artist Management',
     href: '/services/events',
     Icon: CalendarDays,
-    accent: '#f472b6',
-    accentBg: 'rgba(244,114,182,0.08)',
-    accentBorder: 'rgba(244,114,182,0.22)',
+    tone: 'tertiary',
     category: 'Experience',
     tagline: 'Events that attendees actually remember.',
     description:
-      'End-to-end event production for weddings, corporate summits, music festivals and brand activations — every detail managed, nothing left to chance.',
+      'End-to-end event production for weddings, corporate summits and brand activations with tight operational control.',
     highlights: [
       'Weddings, receptions & mehendi',
       'Corporate summits & product launches',
-      'Music festivals & cultural events',
+      'Cultural festivals & public events',
       'Brand activations & pop-ups',
       'Full A/V & stage management',
     ],
     stat: { value: '300+', label: 'Events executed' },
   },
-  {
-    id: 'music',
-    title: 'Music',
-    href: '/services/music',
-    Icon: Music2,
-    accent: '#c084fc',
-    accentBg: 'rgba(192,132,252,0.08)',
-    accentBorder: 'rgba(192,132,252,0.22)',
-    category: 'Audio',
-    tagline: 'Sound that sets the mood before a word is spoken.',
-    description:
-      'Original brand jingles, background scores, full EP production and podcast editing — audio that stays in people\'s heads long after the content ends.',
-    highlights: [
-      'Brand jingles & audio identities',
-      'Background scores for film & ads',
-      'Music production & studio recording',
-      'Artist management & promotion',
-      'Podcast production & editing',
-    ],
-    stat: { value: '150+', label: 'Tracks produced' },
-  },
-  {
-    id: 'consultation',
-    title: 'Consultation',
-    href: '/services/consultation',
-    Icon: Lightbulb,
-    accent: '#86efac',
-    accentBg: 'rgba(134,239,172,0.08)',
-    accentBorder: 'rgba(134,239,172,0.22)',
-    category: 'Strategy',
-    tagline: 'Clarity before creativity — always.',
-    description:
-      'Strategic advisory for brands at any stage — positioning workshops, go-to-market planning, content audits and creative direction that cuts through the noise.',
-    highlights: [
-      'Brand strategy & positioning',
-      'Go-to-market planning',
-      'Social media & content audits',
-      'Creative direction for teams',
-      'Market & competitor analysis',
-    ],
-    stat: { value: '50+', label: 'Strategies delivered' },
-  },
 ]
 
-const CATEGORIES = ['All', 'Visual', 'Strategy', 'Growth', 'Digital', 'Experience', 'Audio']
+const CATEGORIES = ['All', 'Strategy', 'Brand', 'Growth', 'Digital', 'Visual', 'Experience']
 
 const PROCESS = [
-  { n: '01', title: 'Discovery Call',     desc: 'We understand your goals, audience and what success looks like for you.' },
-  { n: '02', title: 'Strategy & Proposal', desc: 'A clear scope, timeline and creative direction before any work begins.' },
-  { n: '03', title: 'Creation',           desc: 'Our team gets to work — you stay looped in at every milestone.' },
-  { n: '04', title: 'Deliver & Grow',     desc: 'Launch, measure, iterate. We stay invested in your results long-term.' },
+  {
+    n: '01',
+    title: 'Discovery Call',
+    desc: 'We understand your goals, audience and what success looks like for you.',
+  },
+  {
+    n: '02',
+    title: 'Strategy & Proposal',
+    desc: 'A clear scope, timeline and creative direction before any work begins.',
+  },
+  {
+    n: '03',
+    title: 'Creation',
+    desc: 'Our team gets to work and keeps you aligned at every major milestone.',
+  },
+  {
+    n: '04',
+    title: 'Deliver & Grow',
+    desc: 'Launch, measure and iterate with a long-term partnership mindset.',
+  },
 ]
 
 const GRID_BG = {
@@ -195,157 +166,157 @@ const GRID_BG = {
   backgroundSize: '60px 60px',
 }
 
-// ── Service card ──────────────────────────────────────────────
-function ServiceCard({ s, index }) {
-  const [hovered, setHovered] = useState(false)
+const TONE_STYLES = {
+  primary: {
+    iconWrap: 'border-primary/20 bg-primary/8 group-hover:bg-primary/14',
+    icon: 'text-primary',
+    chip: 'border-primary/20 bg-primary/8 text-primary',
+    tickWrap: 'border-primary/20 bg-primary/8',
+    tick: 'text-primary',
+    cta: 'border-primary/20 bg-primary/8 text-primary hover:bg-primary/12',
+    stat: 'text-primary',
+    surface: 'hover:border-primary/24 hover:shadow-[0_20px_40px_rgba(72,90,168,0.14)]',
+  },
+  secondary: {
+    iconWrap: 'border-secondary/28 bg-secondary/10 group-hover:bg-secondary/16',
+    icon: 'text-secondary',
+    chip: 'border-secondary/25 bg-secondary/10 text-secondary',
+    tickWrap: 'border-secondary/25 bg-secondary/10',
+    tick: 'text-secondary',
+    cta: 'border-secondary/30 bg-secondary/10 text-secondary hover:bg-secondary/16',
+    stat: 'text-secondary',
+    surface: 'hover:border-secondary/28 hover:shadow-[0_20px_40px_rgba(77,180,192,0.18)]',
+  },
+  tertiary: {
+    iconWrap: 'border-tertiary bg-tertiary/70 group-hover:bg-tertiary',
+    icon: 'text-primary',
+    chip: 'border-tertiary bg-tertiary/70 text-primary',
+    tickWrap: 'border-tertiary bg-tertiary/70',
+    tick: 'text-primary',
+    cta: 'border-tertiary bg-tertiary/70 text-primary hover:bg-tertiary',
+    stat: 'text-primary',
+    surface: 'hover:border-primary/18 hover:shadow-[0_18px_36px_rgba(72,90,168,0.12)]',
+  },
+}
+
+function ServiceCard({ service, index }) {
+  const tone = TONE_STYLES[service.tone] ?? TONE_STYLES.primary
 
   return (
-    <Motion.div
+    <Motion.article
       layout
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.96 }}
-      transition={{ duration: 0.4, delay: (index % 8) * 0.05 }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="group relative bg-[#F4E8DC] border rounded-2xl overflow-hidden flex flex-col transition-all duration-300"
-      style={{
-        borderColor: hovered ? s.accentBorder : 'rgba(72,90,168,0.06)',
-        boxShadow: hovered ? `0 0 40px ${s.accent}12` : 'none',
-      }}
-    >
-      {/* Top accent bar */}
-      <div
-        className="h-0.5 w-full transition-all duration-500"
-        style={{ background: hovered ? `linear-gradient(90deg, ${s.accent}, transparent)` : 'transparent' }}
-      />
+      exit={{ opacity: 0, scale: 0.97 }}
+      transition={{ duration: 0.38, delay: (index % 8) * 0.04 }}
+      whileHover={{ y: -2 }}
+      className={`group relative flex h-full min-h-[100%] flex-col overflow-hidden rounded-2xl border border-primary/12 bg-white shadow-[0_10px_26px_rgba(72,90,168,0.08)] transition-[border-color,box-shadow,transform] duration-300 ${tone.surface}`}>
+      <div className="h-0.5 w-full bg-gradient-to-r from-primary/45 via-secondary/45 to-transparent" />
 
-      <div className="p-7 flex flex-col flex-1">
-
-        {/* Icon + category */}
-        <div className="flex items-start justify-between mb-6">
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300"
-            style={{
-              background: hovered ? s.accentBg : 'rgba(72,90,168,0.04)',
-              border: `1px solid ${hovered ? s.accentBorder : 'rgba(72,90,168,0.08)'}`,
-            }}
-          >
-            <s.Icon size={20} style={{ color: hovered ? s.accent : 'rgba(72,90,168,0.35)', transition: 'color 0.3s' }} />
+      <div className="flex flex-1 flex-col p-6 sm:p-7">
+        <div className="mb-6 flex items-start justify-between gap-3">
+          <div className={`flex h-12 w-12 items-center justify-center rounded-xl border transition-colors duration-300 ${tone.iconWrap}`}>
+            <service.Icon size={20} className={tone.icon} aria-hidden />
           </div>
-          <span
-            className="text-xs font-body font-bold tracking-widest uppercase px-2.5 py-1 rounded-full border"
-            style={{
-              color: s.accent,
-              background: s.accentBg,
-              borderColor: s.accentBorder,
-            }}
-          >
-            {s.category}
+          <span className={`rounded-full border px-2.5 py-1 font-body text-xs font-bold uppercase tracking-widest ${tone.chip}`}>
+            {service.category}
           </span>
         </div>
 
-        {/* Title + tagline */}
-        <h3 className="font-heading text-primary text-xl mb-2 transition-colors duration-200"
-          style={{ letterSpacing: '-0.02em' }}>
-          {s.title}
+        <h3 className="mb-2 font-heading text-lg text-primary sm:text-[1.35rem]" style={{ letterSpacing: '-0.02em' }}>
+          {service.title}
         </h3>
-        <p className="text-primary/35 font-body text-sm italic mb-4" style={{ color: hovered ? 'rgba(72,90,168,0.5)' : undefined, transition: 'color 0.3s' }}>
-          "{s.tagline}"
-        </p>
-        <p className="text-primary/40 font-body text-sm leading-relaxed mb-6">
-          {s.description}
-        </p>
+        <p className="mb-4 font-body text-sm italic leading-relaxed text-primary/68">"{service.tagline}"</p>
+        <p className="mb-6 font-body text-sm leading-relaxed text-primary/74 sm:text-[15px]">{service.description}</p>
 
-        {/* Highlights */}
-        <ul className="flex flex-col gap-2.5 mb-7 flex-1">
-          {s.highlights.map((h, i) => (
-            <li key={i} className="flex items-center gap-2.5 font-body text-sm"
-              style={{ color: 'rgba(72,90,168,0.55)' }}>
-              <span
-                className="w-4 h-4 rounded-md flex items-center justify-center shrink-0"
-                style={{ background: s.accentBg, border: `1px solid ${s.accentBorder}` }}
-              >
-                <Check size={9} style={{ color: s.accent }} strokeWidth={3} />
+        <ul className="mb-7 flex flex-1 flex-col gap-2.5">
+          {service.highlights.map((highlight) => (
+            <li key={highlight} className="flex items-center gap-2.5 font-body text-sm leading-relaxed text-primary/68">
+              <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-md border ${tone.tickWrap}`}>
+                <Check size={9} className={tone.tick} strokeWidth={3} aria-hidden />
               </span>
-              {h}
+              {highlight}
             </li>
           ))}
         </ul>
 
-        {/* Stat + CTA */}
-        <div className="flex items-center justify-between pt-5 border-t"
-          style={{ borderColor: 'rgba(72,90,168,0.06)' }}>
+        <div className="flex items-center justify-between border-t border-primary/10 pt-5">
           <div>
-            <div className="font-heading text-primary text-lg font-bold" style={{ color: s.accent }}>
-              {s.stat.value}
-            </div>
-            <div className="text-primary/30 font-body text-xs">{s.stat.label}</div>
+            <div className={`font-heading text-lg font-bold ${tone.stat}`}>{service.stat.value}</div>
+            <div className="font-body text-xs text-primary/60">{service.stat.label}</div>
           </div>
           <Link
-            to={s.href}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl font-body text-sm font-semibold transition-all duration-200 group/btn"
-            style={{
-              background: hovered ? s.accentBg : 'rgba(72,90,168,0.04)',
-              border: `1px solid ${hovered ? s.accentBorder : 'rgba(72,90,168,0.08)'}`,
-              color: hovered ? s.accent : 'rgba(72,90,168,0.4)',
-            }}
-          >
+            to={service.href}
+            className={`group/btn inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border px-4 py-2.5 font-body text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 ${tone.cta}`}>
             View Service
-            <ChevronRight size={13} className="group-hover/btn:translate-x-0.5 transition-transform" />
+            <ChevronRight size={13} className="transition-transform group-hover/btn:translate-x-0.5" aria-hidden />
           </Link>
         </div>
       </div>
-    </Motion.div>
+    </Motion.article>
   )
 }
 
-// ── Page ──────────────────────────────────────────────────────
 export default function Services() {
   const [activeCategory, setActiveCategory] = useState('All')
+  const categoryCounts = useMemo(
+    () =>
+      SERVICES.reduce((acc, service) => {
+        acc[service.category] = (acc[service.category] ?? 0) + 1
+        return acc
+      }, {}),
+    []
+  )
 
-  const filtered = activeCategory === 'All'
-    ? SERVICES
-    : SERVICES.filter(s => s.category === activeCategory)
+  const filtered = useMemo(
+    () =>
+      activeCategory === 'All'
+        ? SERVICES
+        : SERVICES.filter((service) => service.category === activeCategory),
+    [activeCategory]
+  )
 
   return (
-    <div className="bg-tertiary min-h-screen">
-
-      {/* ── Hero ──────────────────────────────────── */}
-      <section className="relative min-h-[52vh] flex items-end overflow-hidden">
-        <div className="absolute inset-0 bg-[#F4E8DC]" />
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-[#F4E8DC]/50 to-secondary/10" />
+    <div className="min-h-screen bg-white">
+      <section className="relative flex min-h-[52vh] items-end overflow-hidden">
+        <div className="absolute inset-0 bg-white" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-white/50 to-secondary/10" />
         <div className="absolute inset-0 opacity-[0.035]" style={GRID_BG} />
-        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-secondary/8 rounded-full blur-3xl pointer-events-none" />
+        <div className="pointer-events-none absolute right-1/4 top-1/3 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-secondary/8 blur-3xl" />
 
-        <div className="container-custom relative z-10 pt-40 pb-16">
-          <Motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+        <div className="container-custom relative z-10 pb-14 pt-32 sm:pb-16 sm:pt-40">
+          <Motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="section-shell max-w-4xl px-6 py-8 sm:p-10">
             <span className="section-tag">What We Do</span>
-            <h1 className="font-heading text-display text-primary mb-5 leading-tight max-w-3xl"
-              style={{ letterSpacing: '-0.025em' }}>
-              One Roof.<br />
+            <h1 className="mb-5 max-w-3xl font-heading text-display leading-[1.04] text-primary" style={{ letterSpacing: '-0.025em' }}>
+              One Roof.
+              <br />
               <span className="text-gradient">Every Creative Need.</span>
             </h1>
-            <p className="text-primary/45 font-body text-xl max-w-2xl leading-relaxed mb-8">
-              From shutter to the beat — photography, film, branding, advertising,
-              web, events, music and strategy. All in-house. All obsessively crafted.
+            <p className="mb-8 max-w-2xl font-body text-base leading-relaxed text-primary/74 sm:text-lg lg:text-[1.1rem]">
+              Consultation, branding, marketing and advertising, web development,
+              photography and film making, plus event and artist management. All in-house. All crafted with intent.
             </p>
 
-            {/* Quick stat row */}
-            <div className="flex flex-wrap gap-6">
+            <div className="grid grid-cols-2 gap-4 sm:flex sm:flex-wrap sm:gap-6">
               {[
-                { v: '8',    l: 'Services' },
-                { v: '500+', l: 'Projects' },
-                { v: '100+', l: 'Clients'  },
-                { v: '5+',   l: 'Years'    },
-              ].map((s, i) => (
-                <Motion.div key={i}
-                  initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 + i * 0.08 }}
-                  className="flex items-baseline gap-2">
-                  <span className="font-heading text-primary text-2xl font-bold">{s.v}</span>
-                  <span className="text-primary/30 font-body text-sm">{s.l}</span>
+                { value: `${SERVICES.length}`, label: 'Services' },
+                { value: '500+', label: 'Projects' },
+                { value: '100+', label: 'Clients' },
+                { value: '5+', label: 'Years' },
+              ].map((item, index) => (
+                <Motion.div
+                  key={item.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 + index * 0.08 }}
+                  className="rounded-2xl border border-primary/10 bg-white/75 px-4 py-3 sm:bg-transparent sm:border-0 sm:p-0 flex items-baseline gap-2">
+                  <span className="font-heading text-2xl font-bold text-primary">{item.value}</span>
+                  <span className="font-body text-sm text-primary/68">{item.label}</span>
                 </Motion.div>
               ))}
             </div>
@@ -353,126 +324,134 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ── Filter bar ───────────────────────────── */}
-      <section className="sticky top-16 z-20 bg-tertiary/95 backdrop-blur-lg border-b border-[#D7C2AD] py-4">
+      <section className="sticky top-[var(--header-offset)] z-20 border-b border-tertiary bg-white/95 py-2.5 shadow-[0_6px_18px_rgba(72,90,168,0.06)] backdrop-blur-lg sm:py-4">
         <div className="container-custom">
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none">
-            <span className="text-primary/20 font-body text-xs tracking-widest uppercase shrink-0 mr-1">Filter:</span>
-            {CATEGORIES.map(cat => (
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-0.5">
+            <span className="mr-1 shrink-0 font-body text-xs uppercase tracking-widest text-primary/60">Filter:</span>
+            {CATEGORIES.map((category) => {
+              const isActive = activeCategory === category
+              const count = categoryCounts[category] ?? 0
+              return (
+                <button
+                  key={category}
+                  type="button"
+                  onClick={() => setActiveCategory(category)}
+                  className={`min-h-[44px] shrink-0 whitespace-nowrap rounded-full border px-4 py-2 font-body text-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 ${
+                    isActive
+                      ? 'border-primary bg-primary text-tertiary shadow-[0_0_20px_rgba(72,90,168,0.22)]'
+                      : 'border-primary/15 bg-transparent text-primary/72 hover:border-primary/30 hover:text-primary'
+                  }`}>
+                  {category}
+                  {category !== 'All' && (
+                    <span className={`ml-1.5 text-xs ${isActive ? 'text-tertiary/90' : 'text-primary/58'}`}>
+                      ({count})
+                    </span>
+                  )}
+                </button>
+              )
+            })}
+            {activeCategory !== 'All' && (
               <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className="px-4 py-1.5 rounded-full font-body text-sm whitespace-nowrap transition-all duration-200 border shrink-0"
-                style={{
-                  background: activeCategory === cat ? '#485AA8' : 'transparent',
-                  borderColor: activeCategory === cat ? '#485AA8' : 'rgba(72,90,168,0.1)',
-                  color: activeCategory === cat ? '#EDD9C4' : 'rgba(72,90,168,0.35)',
-                  fontWeight: activeCategory === cat ? 600 : 400,
-                  boxShadow: activeCategory === cat ? '0 0 20px rgba(72,90,168,0.3)' : 'none',
-                }}
-              >
-                {cat}
-                {cat !== 'All' && (
-                  <span className="ml-1.5 text-xs opacity-50">
-                    ({SERVICES.filter(s => s.category === cat).length})
-                  </span>
-                )}
+                type="button"
+                onClick={() => setActiveCategory('All')}
+                className="ml-auto inline-flex min-h-[42px] shrink-0 items-center gap-1 rounded-full border border-tertiary px-2.5 py-1.5 font-body text-xs text-primary/60 transition-all hover:border-primary/30 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2">
+                <X size={11} aria-hidden /> Clear
               </button>
-            ))}
+            )}
           </div>
         </div>
       </section>
 
-      {/* ── Services grid ────────────────────────── */}
-      <section className="section-padding bg-tertiary">
+      <section className="section-padding bg-white">
         <div className="container-custom">
           <Motion.p
             key={activeCategory}
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="text-primary/20 font-body text-sm mb-10"
-          >
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            aria-live="polite"
+            className="mb-8 sm:mb-10 font-body text-sm text-primary/68">
             {activeCategory === 'All'
               ? `Showing all ${SERVICES.length} services`
               : `${filtered.length} service${filtered.length !== 1 ? 's' : ''} in ${activeCategory}`}
           </Motion.p>
 
-          <Motion.div layout className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          <Motion.div layout className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:gap-7">
             <AnimatePresence mode="popLayout">
-              {filtered.map((s, i) => (
-                <ServiceCard key={s.id} s={s} index={i} />
+              {filtered.map((service, index) => (
+                <ServiceCard key={service.id} service={service} index={index} />
               ))}
             </AnimatePresence>
           </Motion.div>
         </div>
       </section>
 
-      {/* ── Process strip ────────────────────────── */}
-      <section className="section-padding bg-[#F4E8DC] border-t border-[#D7C2AD]">
+      <section className="section-padding border-t border-tertiary bg-white">
         <div className="container-custom">
           <Motion.div
-            initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }} className="text-center mb-14"
-          >
-            <span className="section-tag">How We Work</span>
-            <h2 className="font-heading text-h2 text-primary">
-              From Brief to <span className="text-gradient">Brilliant</span>
-            </h2>
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-12 sm:mb-14">
+            <SectionHeading
+              tag="How We Work"
+              title="From Brief to"
+              accent="Brilliant"
+              align="center"
+              className="max-w-2xl"
+            />
           </Motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-[#D7C2AD] rounded-2xl overflow-hidden border border-[#D7C2AD]">
-            {PROCESS.map((step, i) => (
-              <Motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className="bg-[#F4E8DC] p-8 hover:bg-[#E8D4BF] transition-colors duration-200 group"
-              >
-                <div className="font-heading text-primary/30 text-4xl font-bold mb-4 group-hover:text-primary/50 transition-colors">
+          <div className="grid overflow-hidden rounded-2xl border border-tertiary bg-tertiary sm:grid-cols-2 lg:grid-cols-4">
+            {PROCESS.map((step, index) => (
+              <Motion.article
+                key={step.n}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="group border-b border-r border-tertiary bg-white p-6 transition-colors duration-200 hover:bg-tertiary/55 sm:p-8 lg:border-b-0">
+                <div className="mb-4 font-heading text-4xl font-bold text-primary/60 transition-colors group-hover:text-primary/75">
                   {step.n}
                 </div>
-                <h3 className="font-heading text-primary text-base mb-3">{step.title}</h3>
-                <p className="text-primary/35 font-body text-sm leading-relaxed">{step.desc}</p>
-              </Motion.div>
+                <h3 className="mb-3 font-heading text-base text-primary">{step.title}</h3>
+                <p className="font-body text-sm leading-relaxed text-primary/68">{step.desc}</p>
+              </Motion.article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Why ShutterBeat strip ─────────────────── */}
-      <section className="section-padding bg-tertiary border-t border-[#D7C2AD]">
+      <section className="section-padding border-t border-tertiary bg-white">
         <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-
-            {/* Left: text */}
-            <Motion.div
-              initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}>
+          <div className="grid items-center gap-16 lg:grid-cols-2">
+            <Motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
               <span className="section-tag">Why Us</span>
-              <h2 className="font-heading text-h2 text-primary mb-6">
-                Not a vendor.<br />
+              <h2 className="mb-6 font-heading text-h2 text-primary">
+                Not a vendor.
+                <br />
                 <span className="text-gradient">A creative partner.</span>
               </h2>
-              <p className="text-primary/40 font-body text-lg leading-relaxed mb-8">
-                Most agencies specialise in one lane. We built ShutterBeat to handle
-                every creative and digital touchpoint — so your brand stays consistent
-                from a wedding film to a Google ad campaign.
+              <p className="mb-8 font-body text-base leading-relaxed text-primary/74 sm:text-lg">
+                Most agencies specialise in one lane. We built ShutterBeat Media to handle every
+                creative and digital touchpoint, so your brand remains consistent across channels.
               </p>
               <ul className="flex flex-col gap-4">
                 {[
-                  'In-house team — no outsourcing, full accountability',
+                  'In-house team with full accountability',
                   'Every discipline under one roof in Pune',
-                  'Strategy-first before any creative begins',
-                  'Transparent pricing, no surprise invoices',
-                  'You own all deliverables — always',
-                ].map((item, i) => (
+                  'Strategy-first before creative execution',
+                  'Transparent pricing and clear scopes',
+                  'You own all deliverables, always',
+                ].map((item, index) => (
                   <Motion.li
-                    key={i}
-                    initial={{ opacity: 0, x: -12 }} whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                    className="flex items-center gap-3 text-primary/60 font-body text-sm"
-                  >
-                    <span className="w-5 h-5 rounded-lg bg-secondary/10 border border-secondary/25 flex items-center justify-center shrink-0">
-                      <Check size={10} className="text-secondary" strokeWidth={3} />
+                    key={item}
+                    initial={{ opacity: 0, x: -12 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.08 }}
+                    className="flex items-center gap-3 font-body text-sm text-primary/68">
+                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-lg border border-secondary/25 bg-secondary/10">
+                      <Check size={10} className="text-secondary" strokeWidth={3} aria-hidden />
                     </span>
                     {item}
                   </Motion.li>
@@ -480,97 +459,89 @@ export default function Services() {
               </ul>
             </Motion.div>
 
-            {/* Right: service icon grid */}
             <Motion.div
-              initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="grid grid-cols-4 gap-3"
-            >
-              {SERVICES.map((s, i) => (
-                <Motion.div
-                  key={s.id}
-                  initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }} transition={{ delay: i * 0.07 }}
-                  whileHover={{ scale: 1.08 }}
-                >
-                  <Link
-                    to={s.href}
-                    className="flex flex-col items-center gap-2 p-4 rounded-xl border transition-all duration-200 group"
-                    style={{
-                      background: s.accentBg,
-                      borderColor: s.accentBorder,
-                    }}
-                  >
-                    <s.Icon size={20} style={{ color: s.accent }} />
-                    <span className="text-primary/50 font-body text-xs text-center leading-tight group-hover:text-primary transition-colors">
-                      {s.title}
-                    </span>
-                  </Link>
-                </Motion.div>
-              ))}
+              className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+              {SERVICES.map((service, index) => {
+                const tone = TONE_STYLES[service.tone] ?? TONE_STYLES.primary
+                return (
+                  <Motion.div
+                    key={service.id}
+                    initial={{ opacity: 0, scale: 0.85 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.06 }}
+                    whileHover={{ scale: 1.04 }}>
+                    <Link
+                      to={service.href}
+                      className={`group flex min-h-[112px] flex-col items-center justify-center gap-2 rounded-xl border p-4 text-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 sm:min-h-[120px] ${tone.chip}`}>
+                      <service.Icon size={20} className={tone.icon} aria-hidden />
+                      <span className="font-body text-xs leading-tight text-primary/74 group-hover:text-primary">
+                        {service.title}
+                      </span>
+                    </Link>
+                  </Motion.div>
+                )
+              })}
             </Motion.div>
           </div>
         </div>
       </section>
 
-      {/* ── Testimonial highlight ─────────────────── */}
-      <section className="section-padding bg-[#F4E8DC] border-t border-[#D7C2AD]">
+      <section className="section-padding border-t border-tertiary bg-white">
         <div className="container-custom">
           <Motion.div
-            initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="max-w-3xl mx-auto text-center"
-          >
-            <div className="flex justify-center gap-1 mb-6">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} size={16} className="text-secondary fill-secondary" />
+            className="mx-auto max-w-3xl text-center">
+            <div className="mb-6 flex justify-center gap-1">
+              {[...Array(5)].map((_, index) => (
+                <Star key={index} size={16} className="fill-secondary text-secondary" aria-hidden />
               ))}
             </div>
-            <blockquote className="font-heading text-primary text-2xl lg:text-3xl leading-snug mb-6"
-              style={{ letterSpacing: '-0.02em' }}>
-              "ShutterBeat handled our brand film, website, ad campaign and event photography
-              — all in the same quarter. The consistency across every piece was remarkable."
+            <blockquote className="mb-6 font-heading text-[1.75rem] leading-snug text-primary lg:text-3xl" style={{ letterSpacing: '-0.02em' }}>
+              "ShutterBeat Media handled our brand film, website, ad campaign and event photography in one quarter. The consistency across every piece was remarkable."
             </blockquote>
             <div className="flex items-center justify-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center">
-                <span className="font-heading text-primary text-sm font-bold">VN</span>
+              <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/30 bg-primary/20">
+                <span className="font-heading text-sm font-bold text-primary">VN</span>
               </div>
               <div className="text-left">
-                <p className="text-primary font-body text-sm font-semibold">Vikram Nair</p>
-                <p className="text-primary/35 font-body text-xs">CMO, DriveX Motors</p>
+                <p className="font-body text-sm font-semibold text-primary">Vikram Nair</p>
+                <p className="font-body text-xs text-primary/60">CMO, DriveX Motors</p>
               </div>
             </div>
           </Motion.div>
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────── */}
-      <section className="section-padding bg-tertiary border-t border-[#D7C2AD]">
+      <section className="section-padding border-t border-tertiary bg-white">
         <div className="container-custom">
           <Motion.div
-            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="relative rounded-2xl overflow-hidden p-10 lg:p-16 text-center"
-            style={{ background: 'linear-gradient(135deg, rgba(72,90,168,0.2), rgba(77,180,192,0.1))' }}
-          >
-            {/* BG grid */}
+            className="relative section-shell overflow-hidden rounded-2xl p-8 text-center sm:p-10 lg:p-16"
+            style={{ background: 'linear-gradient(135deg, rgba(72,90,168,0.2), rgba(77,180,192,0.1))' }}>
             <div className="absolute inset-0 opacity-[0.04]" style={GRID_BG} />
-            <div className="absolute top-0 right-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-60 h-60 bg-secondary/10 rounded-full blur-3xl" />
+            <div className="absolute right-0 top-0 h-80 w-80 rounded-full bg-primary/10 blur-3xl" />
+            <div className="absolute bottom-0 left-0 h-60 w-60 rounded-full bg-secondary/10 blur-3xl" />
 
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/10 mb-6">
-                <Zap size={14} className="text-secondary" />
-                <span className="text-primary/60 font-body text-sm">Ready when you are</span>
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/10 bg-primary/5 px-4 py-2">
+                <Zap size={14} className="text-secondary" aria-hidden />
+                <span className="font-body text-sm text-primary/68">Ready when you are</span>
               </div>
-              <h2 className="font-heading text-h2 text-primary mb-4">
-                Let's Build Something <span className="text-gradient">Unforgettable</span>
+              <h2 className="mb-4 font-heading text-h2 text-primary">
+                Let&apos;s Build Something <span className="text-gradient">Unforgettable</span>
               </h2>
-              <p className="text-primary/40 font-body text-lg max-w-xl mx-auto mb-10">
-                Tell us what you need — one service or the whole stack. We'll put together
-                a proposal within 24 hours.
+              <p className="mx-auto mb-8 sm:mb-10 max-w-xl font-body text-base text-primary/74 sm:text-lg leading-relaxed">
+                Tell us what you need, one service or the full stack. We will share a clear proposal within 24 hours.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col justify-center gap-4 sm:flex-row">
                 <Link to="/contact" className="btn-primary">
                   Start a Project <ArrowRight size={16} />
                 </Link>
@@ -582,7 +553,6 @@ export default function Services() {
           </Motion.div>
         </div>
       </section>
-
     </div>
   )
 }

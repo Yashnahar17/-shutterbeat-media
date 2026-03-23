@@ -1,0 +1,15 @@
+export const INDEXABLE_ROUTES = [
+  { path: '/', priority: '1.0', changefreq: 'weekly' },
+  { path: '/about', priority: '0.8', changefreq: 'monthly' },
+  { path: '/services', priority: '0.9', changefreq: 'weekly' },
+  { path: '/services/consultation', priority: '0.8', changefreq: 'monthly' },
+  { path: '/services/branding', priority: '0.8', changefreq: 'monthly' },
+  { path: '/services/advertising', priority: '0.8', changefreq: 'monthly' },
+  { path: '/services/web-development', priority: '0.8', changefreq: 'monthly' },
+  { path: '/services/photography', priority: '0.8', changefreq: 'monthly' },
+  { path: '/services/events', priority: '0.8', changefreq: 'monthly' },
+  { path: '/portfolio', priority: '0.8', changefreq: 'weekly' },
+  { path: '/contact', priority: '0.9', changefreq: 'monthly' },
+  { path: '/career', priority: '0.7', changefreq: 'monthly' },
+  { path: '/policies', priority: '0.4', changefreq: 'yearly' },
+]

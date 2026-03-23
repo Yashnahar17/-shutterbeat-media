@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion as Motion} from 'framer-motion'
 import {
   Camera, Music, Calendar, Film,
   Megaphone, Code, Layers, Briefcase, ArrowRight
 } from 'lucide-react'
-import { services } from '../data/services'
+import { visibleServices } from '../data/services'
 
 // Map icon string → actual Lucide component
 const iconMap = {
@@ -39,11 +39,11 @@ const cardVariants = {
 
 export default function ServicesSection() {
   return (
-    <section className="section-padding bg-tertiary">
+    <section className="section-padding bg-white">
       <div className="container-custom">
 
         {/* ── HEADING ──────────────────────────── */}
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -56,28 +56,28 @@ export default function ServicesSection() {
             Our <span className="text-gradient">Services</span>
           </h2>
 
-          <p className="text-primary/50 font-body text-base leading-relaxed">
+          <p className="text-primary/65 font-body text-sm sm:text-base leading-relaxed">
             From shutter to the beat — we cover every creative and digital
             need your business could have, all under one roof.
           </p>
-        </motion.div>
+        </Motion.div>
 
         {/* ── SERVICES GRID ────────────────────── */}
-        <motion.div
+        <Motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
-          {services.map((service, index) => {
+          {visibleServices.map((service, index) => {
             const Icon = iconMap[service.icon] || Camera
 
             return (
-              <motion.div key={service.id} variants={cardVariants}>
+              <Motion.div key={service.id} variants={cardVariants}>
                 <Link
                   to={service.slug}
-                  className="group relative flex flex-col h-full bg-[#F4E8DC] border border-[#D7C2AD] rounded-card p-6 overflow-hidden hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover">
+                  className="group relative flex flex-col h-full bg-white border border-tertiary rounded-card p-5 sm:p-6 overflow-hidden hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover">
 
                   {/* Gradient accent top */}
                   <div className={`absolute inset-x-0 top-0 h-px bg-gradient-to-r ${cardAccents[index]}`} />
@@ -86,7 +86,7 @@ export default function ServicesSection() {
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-card" />
 
                   {/* Icon */}
-                  <div className="relative z-10 w-12 h-12 rounded-xl bg-[#E8D4BF] border border-[#D7C2AD] flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:border-primary/40 transition-all duration-300">
+                  <div className="relative z-10 w-12 h-12 rounded-xl bg-tertiary/60 border border-tertiary flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:border-primary/40 transition-all duration-300">
                     <Icon
                       size={22}
                       className="text-primary/60 group-hover:text-secondary transition-colors duration-300"
@@ -99,7 +99,7 @@ export default function ServicesSection() {
                   </h3>
 
                   {/* Description */}
-                  <p className="relative z-10 text-primary/40 font-body text-sm leading-relaxed flex-1 mb-5">
+                  <p className="relative z-10 text-primary/60 font-body text-sm leading-relaxed flex-1 mb-5">
                     {service.shortDesc}
                   </p>
 
@@ -108,14 +108,14 @@ export default function ServicesSection() {
                     {(service.categories || service.eventTypes || []).slice(0, 3).map((cat) => (
                       <span
                         key={cat}
-                        className="text-xs font-body px-2 py-0.5 rounded-full bg-[#E8D4BF] text-primary/40 border border-[#D7C2AD]">
+                        className="text-xs font-body px-2 py-0.5 rounded-full bg-tertiary/60 text-primary/60 border border-tertiary">
                         {cat}
                       </span>
                     ))}
                   </div>
 
                   {/* CTA arrow */}
-                  <div className="relative z-10 flex items-center gap-2 text-sm font-body font-medium text-primary/40 group-hover:text-secondary transition-colors duration-300">
+                  <div className="relative z-10 flex items-center gap-2 text-sm font-body font-medium text-primary/60 group-hover:text-secondary transition-colors duration-300">
                     <span>Explore</span>
                     <ArrowRight
                       size={14}
@@ -124,27 +124,27 @@ export default function ServicesSection() {
                   </div>
 
                 </Link>
-              </motion.div>
+              </Motion.div>
             )
           })}
 
-        </motion.div>
+        </Motion.div>
 
         {/* ── BOTTOM CTA ───────────────────────── */}
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.3 }}
           className="text-center mt-12">
-          <p className="text-primary/40 font-body text-sm mb-4">
+          <p className="text-primary/60 font-body text-sm mb-4">
             Not sure what you need?
           </p>
           <Link to="/contact" className="btn-secondary">
             Let's Talk
             <ArrowRight size={16} />
           </Link>
-        </motion.div>
+        </Motion.div>
 
       </div>
     </section>

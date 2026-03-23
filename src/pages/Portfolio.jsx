@@ -1,46 +1,46 @@
-import { useState, useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useMemo, useState } from 'react'
+import { motion as Motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import {
-  ArrowRight, ExternalLink, Camera, Megaphone, CalendarDays,
-  Film, Palette, Globe, Music2, Lightbulb, Filter, X,
+  ArrowRight,
+  Camera,
+  Megaphone,
+  CalendarDays,
+  Film,
+  Palette,
+  Globe,
+  Lightbulb,
+  Filter,
+  X,
 } from 'lucide-react'
-import { portfolio, portfolioCategories } from '../data/portfolio'
+import { visiblePortfolio, visiblePortfolioCategories } from '../data/portfolio'
+import SafeImage from '../components/shared/SafeImage'
 
-// ── Category icon map ───────────────────────
 const CAT_ICONS = {
-  Photography:    Camera,
-  Advertising:    Megaphone,
-  Events:         CalendarDays,
-  'Film Making':  Film,
-  Branding:       Palette,
+  Photography: Camera,
+  Advertising: Megaphone,
+  Events: CalendarDays,
+  'Film Making': Film,
+  Branding: Palette,
   'Web Development': Globe,
-  Music:          Music2,
-  Consultation:   Lightbulb,
+  Consultation: Lightbulb,
 }
 
-// ── Category accent colours ─────────────────
 const CAT_COLOURS = {
-  Photography:       'from-primary/20   to-secondary/10   border-primary/20   text-secondary',
-  Advertising:       'from-primary/20  to-secondary/10 border-primary/20  text-secondary',
-  Events:            'from-primary/20 to-secondary/10 border-primary/20 text-secondary',
-  'Film Making':     'from-primary/20    to-secondary/10   border-primary/20    text-secondary',
-  Branding:          'from-emerald-500/20 to-teal-500/10  border-emerald-500/25 text-emerald-400',
-  'Web Development': 'from-cyan-500/20   to-teal-500/10   border-cyan-500/25   text-cyan-400',
-  Music:             'from-primary/20 to-secondary/10  border-primary/20 text-secondary',
-  Consultation:      'from-primary/20   to-secondary/10  border-primary/20   text-secondary',
+  Photography: 'from-primary/18 to-secondary/12 border-primary/20 text-primary',
+  Advertising: 'from-secondary/18 to-primary/12 border-secondary/25 text-primary',
+  Events: 'from-primary/16 to-tertiary/35 border-primary/20 text-primary',
+  'Film Making': 'from-secondary/15 to-tertiary/30 border-secondary/20 text-primary',
+  Branding: 'from-primary/18 to-tertiary/35 border-primary/20 text-primary',
+  'Web Development': 'from-secondary/20 to-tertiary/35 border-secondary/25 text-primary',
+  Consultation: 'from-secondary/16 to-primary/10 border-secondary/20 text-primary',
 }
 
-// ── Placeholder image blocks ─────────────────
 const PLACEHOLDER_GRADIENTS = [
   'from-primary/40 to-secondary/20',
-  'from-primary/40 to-secondary/20',
-  'from-primary/40 to-secondary/20',
-  'from-primary/40 to-secondary/20',
-  'from-emerald-900/60 to-teal-900/30',
-  'from-cyan-900/60 to-teal-900/30',
-  'from-primary/40 to-secondary/20',
-  'from-primary/40 to-secondary/20',
+  'from-secondary/35 to-primary/15',
+  'from-primary/30 to-tertiary/45',
+  'from-secondary/28 to-tertiary/40',
 ]
 
 const GRID_STYLE = {
@@ -50,240 +50,255 @@ const GRID_STYLE = {
   backgroundSize: '60px 60px',
 }
 
-// ── Stats derived from data ──────────────────
 function buildStats(items) {
-  const cats = new Set(items.map(i => i.category))
-  const clients = new Set(items.map(i => i.client))
+  const categories = new Set(items.map((item) => item.category))
+  const clients = new Set(items.map((item) => item.client))
   return [
-    { value: `${items.length}+`,   label: 'Projects Delivered' },
-    { value: `${cats.size}`,       label: 'Creative Disciplines' },
-    { value: `${clients.size}+`,   label: 'Happy Clients' },
-    { value: '5+',                  label: 'Years of Craft' },
+    { value: `${items.length}+`, label: 'Projects Delivered' },
+    { value: `${categories.size}`, label: 'Creative Disciplines' },
+    { value: `${clients.size}+`, label: 'Happy Clients' },
+    { value: '5+', label: 'Years of Craft' },
   ]
 }
 
-// ── Single card ──────────────────────────────
+function buildCategoryCounts(items) {
+  return items.reduce((acc, item) => {
+    acc[item.category] = (acc[item.category] ?? 0) + 1
+    return acc
+  }, {})
+}
+
 function PortfolioCard({ item, index }) {
   const Icon = CAT_ICONS[item.category] || Camera
   const colours = CAT_COLOURS[item.category] || CAT_COLOURS.Photography
   const grad = PLACEHOLDER_GRADIENTS[item.id % PLACEHOLDER_GRADIENTS.length]
-  const [hover, setHover] = useState(false)
 
   return (
-    <motion.div
+    <Motion.article
       layout
-      initial={{ opacity: 0, y: 30, scale: 0.97 }}
+      initial={{ opacity: 0, y: 24, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -20, scale: 0.95 }}
-      transition={{ duration: 0.4, delay: (index % 9) * 0.04 }}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      className="group relative bg-[#F4E8DC] border border-[#D7C2AD] rounded-card overflow-hidden hover:border-primary/15 transition-colors duration-300 cursor-pointer">
+      exit={{ opacity: 0, y: -18, scale: 0.96 }}
+      transition={{ duration: 0.35, delay: (index % 8) * 0.035 }}
+      whileHover={{ y: -2 }}
+      className="group relative overflow-hidden rounded-card border border-primary/12 bg-white shadow-[0_8px_22px_rgba(72,90,168,0.08)] transition-[border-color,box-shadow,transform] duration-300 hover:border-primary/24 hover:shadow-[0_18px_36px_rgba(72,90,168,0.14)]">
+      <div className="relative aspect-[4/3] overflow-hidden border-b border-primary/10">
+        {item.image ? (
+          <SafeImage
+            src={item.image}
+            alt={item.title}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+            fallback={
+              <div className={`flex h-full w-full items-center justify-center bg-gradient-to-br ${grad}`}>
+                <Icon size={40} className="text-primary/35" aria-hidden />
+              </div>
+            }
+          />
+        ) : (
+          <div className={`flex h-full w-full items-center justify-center bg-gradient-to-br ${grad}`}>
+            <Icon size={40} className="text-primary/35" aria-hidden />
+          </div>
+        )}
 
-      {/* ── Image / placeholder area ── */}
-      <div className="relative aspect-[4/3] overflow-hidden">
-        {item.image
-          ? <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-          : (
-            <div className={`w-full h-full bg-gradient-to-br ${grad} flex items-center justify-center`}>
-              <Icon size={40} className="text-primary/10" />
-            </div>
-          )
-        }
-
-        {/* Category pill */}
-        <div className={`absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gradient-to-r ${colours} border backdrop-blur-sm`}>
-          <Icon size={11} />
+        <div className={`absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border bg-gradient-to-r px-3 py-1 ${colours}`}>
+          <Icon size={11} aria-hidden />
           <span className="font-body text-xs font-semibold tracking-wide">{item.category}</span>
         </div>
-
-        {/* Hover overlay */}
-        <motion.div
-          initial={false}
-          animate={{ opacity: hover ? 1 : 0 }}
-          transition={{ duration: 0.25 }}
-          className="absolute inset-0 bg-tertiary/80 flex items-center justify-center backdrop-blur-sm">
-          <div className="w-12 h-12 rounded-full border border-primary/20 flex items-center justify-center">
-            <ExternalLink size={18} className="text-primary" />
-          </div>
-        </motion.div>
       </div>
 
-      {/* ── Content ── */}
-      <div className="p-5">
-        <p className="text-primary/30 font-body text-xs mb-1 tracking-wide uppercase">{item.client}</p>
-        <h3 className="font-heading text-primary text-base mb-2 leading-snug group-hover:text-secondary transition-colors duration-200">
+      <div className="p-5 sm:p-6">
+        <p className="mb-2 font-body text-xs uppercase tracking-wide text-primary/58">{item.client}</p>
+        <h3 className="mb-2 font-heading text-base leading-snug text-primary transition-colors duration-200 group-hover:text-secondary">
           {item.title}
         </h3>
-        <p className="text-primary/40 font-body text-sm leading-relaxed line-clamp-2">{item.desc}</p>
+        <p className="line-clamp-2 font-body text-sm leading-relaxed text-primary/72">{item.desc}</p>
       </div>
-    </motion.div>
+    </Motion.article>
   )
 }
 
-// ── Page ─────────────────────────────────────
 export default function Portfolio() {
   const [active, setActive] = useState('All')
-  const stats = useMemo(() => buildStats(portfolio), [])
+  const stats = useMemo(() => buildStats(visiblePortfolio), [])
+  const categoryCounts = useMemo(() => buildCategoryCounts(visiblePortfolio), [])
+  const disciplineCategories = useMemo(
+    () => visiblePortfolioCategories.filter((category) => category !== 'All'),
+    []
+  )
 
   const filtered = useMemo(
-    () => active === 'All' ? portfolio : portfolio.filter(i => i.category === active),
+    () => (active === 'All' ? visiblePortfolio : visiblePortfolio.filter((item) => item.category === active)),
     [active]
   )
 
   return (
-    <div className="bg-tertiary min-h-screen">
-
-      {/* ── Hero ────────────────────────────────── */}
-      <section className="relative min-h-[55vh] flex items-end pb-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[#F4E8DC]" />
+    <div className="min-h-screen bg-white">
+      <section className="relative flex min-h-[55vh] items-end overflow-hidden pb-0">
+        <div className="absolute inset-0 bg-white" />
         <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-transparent to-secondary/10" />
         <div className="absolute inset-0 opacity-[0.04]" style={GRID_STYLE} />
+        <div className="pointer-events-none absolute right-1/3 top-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-secondary/8 blur-3xl" />
 
-        {/* floating glows */}
-        <div className="absolute top-1/4 right-1/3 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/4 w-72 h-72 bg-secondary/8 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="container-custom relative z-10 pt-40 pb-16">
-          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+        <div className="container-custom relative z-10 pb-14 pt-32 sm:pb-16 sm:pt-40 lg:pb-20">
+          <Motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="max-w-4xl rounded-[1.6rem] border border-primary/12 bg-white/72 px-6 py-8 shadow-[0_24px_52px_rgba(72,90,168,0.14)] backdrop-blur-sm sm:p-10">
             <span className="section-tag">Our Work</span>
-            <h1 className="font-heading text-display text-primary mb-5 leading-tight max-w-2xl">
-              Creative Work That<br />
+            <h1 className="mb-5 max-w-2xl font-heading text-display leading-tight text-primary">
+              Creative Work That
+              <br />
               <span className="text-gradient">Speaks Loud</span>
             </h1>
-            <p className="text-primary/50 font-body text-xl max-w-2xl leading-relaxed">
-              From wedding films to national ad campaigns — a collection of stories
-              we've had the privilege of telling for brands and people across India.
+            <p className="max-w-2xl font-body text-base leading-relaxed text-primary/72 sm:text-lg">
+              From wedding films to national ad campaigns, this is a curated collection
+              of stories we have built for brands and people across India.
             </p>
-          </motion.div>
+          </Motion.div>
 
-          {/* Stats row */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3, duration: 0.7 }}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-[#D7C2AD] mt-14 border-t border-[#D7C2AD]">
-            {stats.map((s, i) => (
-              <div key={i} className="bg-[#F4E8DC] px-6 py-5">
-                <div className="font-heading text-primary text-2xl font-bold mb-0.5">{s.value}</div>
-                <div className="text-primary/35 font-body text-xs tracking-wide">{s.label}</div>
+          <Motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.7 }}
+            className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-tertiary bg-tertiary sm:grid-cols-4">
+            {stats.map((stat, index) => (
+              <div key={index} className="bg-white px-6 py-5">
+                <div className="mb-1 font-heading text-2xl font-bold text-primary">{stat.value}</div>
+                <div className="font-body text-xs tracking-wide text-primary/65">{stat.label}</div>
               </div>
             ))}
-          </motion.div>
+          </Motion.div>
         </div>
       </section>
 
-      {/* ── Filter bar ─────────────────────────── */}
-      <section className="sticky top-16 z-20 bg-tertiary/90 backdrop-blur-lg border-b border-[#D7C2AD] py-4">
+      <section className="sticky top-[var(--header-offset)] z-20 border-b border-tertiary bg-white/90 py-2.5 backdrop-blur-lg sm:py-4">
         <div className="container-custom">
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-0.5">
-            <Filter size={14} className="text-primary/25 shrink-0 mr-1" />
-            {portfolioCategories.map(cat => {
-              const Icon = CAT_ICONS[cat]
-              const isActive = active === cat
+          <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-none">
+            <Filter size={14} className="mr-1 shrink-0 text-primary/55" aria-hidden />
+            {visiblePortfolioCategories.map((category) => {
+              const Icon = CAT_ICONS[category]
+              const isActive = active === category
+              const count = categoryCounts[category] ?? 0
               return (
                 <button
-                  key={cat}
-                  onClick={() => setActive(cat)}
-                  className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-body text-sm font-medium whitespace-nowrap transition-all duration-200 border
-                    ${isActive
-                      ? 'bg-primary text-tertiary border-primary shadow-lg shadow-primary/20'
-                      : 'bg-transparent text-primary/40 border-[#D7C2AD] hover:text-primary hover:border-primary/20'}`}>
-                  {Icon && <Icon size={12} />}
-                  {cat}
-                  {isActive && cat !== 'All' && (
-                    <span className="ml-0.5 text-primary/60 text-xs">
-                      ({portfolio.filter(i => i.category === cat).length})
+                  key={category}
+                  type="button"
+                  onClick={() => setActive(category)}
+                  className={`inline-flex min-h-[42px] items-center gap-1.5 whitespace-nowrap rounded-full border px-3.5 py-1.5 font-body text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 ${
+                    isActive
+                      ? 'border-primary bg-primary text-tertiary shadow-[0_0_20px_rgba(72,90,168,0.22)]'
+                      : 'border-tertiary bg-transparent text-primary/72 hover:border-primary/30 hover:text-primary'
+                  }`}>
+                  {Icon && <Icon size={12} aria-hidden />}
+                  {category}
+                  {category !== 'All' && (
+                    <span className={`text-xs ${isActive ? 'text-tertiary/90' : 'text-primary/58'}`}>
+                      ({count})
                     </span>
                   )}
                 </button>
               )
             })}
             {active !== 'All' && (
-              <button onClick={() => setActive('All')}
-                className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-primary/30 hover:text-primary font-body text-xs border border-[#D7C2AD] hover:border-primary/20 transition-all ml-auto shrink-0">
-                <X size={11} /> Clear
+              <button
+                type="button"
+                onClick={() => setActive('All')}
+                className="ml-auto inline-flex min-h-[42px] shrink-0 items-center gap-1 rounded-full border border-tertiary px-2.5 py-1.5 font-body text-xs text-primary/60 transition-all hover:border-primary/30 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2">
+                <X size={11} aria-hidden /> Clear
               </button>
             )}
           </div>
         </div>
       </section>
 
-      {/* ── Grid ────────────────────────────────── */}
-      <section className="section-padding bg-tertiary">
+      <section className="section-padding bg-white">
         <div className="container-custom">
-
-          {/* Result count */}
-          <motion.p
+          <Motion.p
             key={active}
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            className="text-primary/25 font-body text-sm mb-8">
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            aria-live="polite"
+            className="mb-8 font-body text-sm text-primary/65">
             {active === 'All'
-              ? `Showing all ${portfolio.length} projects`
+              ? `Showing all ${visiblePortfolio.length} projects`
               : `${filtered.length} project${filtered.length !== 1 ? 's' : ''} in ${active}`}
-          </motion.p>
+          </Motion.p>
 
-          {/* Cards */}
-          <motion.div layout className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <Motion.div layout className="grid gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-7">
             <AnimatePresence mode="popLayout">
-              {filtered.map((item, i) => (
-                <PortfolioCard key={item.id} item={item} index={i} />
+              {filtered.map((item, index) => (
+                <PortfolioCard key={item.id} item={item} index={index} />
               ))}
             </AnimatePresence>
-          </motion.div>
+          </Motion.div>
 
-          {/* Empty state */}
           {filtered.length === 0 && (
-            <div className="text-center py-24">
-              <p className="text-primary/20 font-body text-lg">No projects in this category yet.</p>
-              <button onClick={() => setActive('All')} className="btn-secondary mt-4">View all work</button>
+            <div className="py-24 text-center">
+              <p className="font-body text-lg text-primary/65">No projects in this category yet.</p>
+              <button type="button" onClick={() => setActive('All')} className="btn-secondary mt-4">
+                View all work
+              </button>
             </div>
           )}
         </div>
       </section>
 
-      {/* ── Category spotlight strip ────────────── */}
-      <section className="section-padding bg-[#F4E8DC] border-t border-[#D7C2AD]">
+      <section className="section-padding border-t border-tertiary bg-white">
         <div className="container-custom">
-          <div className="text-center mb-12">
+          <div className="mb-12 text-center">
             <span className="section-tag">By Discipline</span>
-            <h2 className="font-heading text-h2 text-primary">Every Medium, <span className="text-gradient">Mastered</span></h2>
+            <h2 className="font-heading text-h2 text-primary">
+              Every Medium, <span className="text-gradient">Mastered</span>
+            </h2>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            {portfolioCategories.filter(c => c !== 'All').map((cat, i) => {
-              const Icon = CAT_ICONS[cat] || Camera
-              const count = portfolio.filter(p => p.category === cat).length
-              const colours = CAT_COLOURS[cat]
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {disciplineCategories.map((category, index) => {
+              const Icon = CAT_ICONS[category] || Camera
+              const count = categoryCounts[category] ?? 0
+              const colours = CAT_COLOURS[category] || CAT_COLOURS.Photography
               return (
-                <motion.button
-                  key={cat}
-                  onClick={() => { setActive(cat); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
-                  initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-                  className={`group flex flex-col items-start gap-3 p-5 rounded-card bg-gradient-to-br ${colours} border backdrop-blur-sm hover:scale-[1.02] transition-transform duration-200 text-left`}>
-                  <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center">
-                    <Icon size={18} className="text-primary/70" />
+                <Motion.button
+                  key={category}
+                  type="button"
+                  onClick={() => {
+                    setActive(category)
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.06 }}
+                  className={`group flex min-h-[148px] flex-col items-start gap-3 rounded-card border bg-gradient-to-br p-5 text-left transition-transform duration-200 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 sm:min-h-[160px] ${colours}`}>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary/10 bg-white/70">
+                    <Icon size={18} className="text-primary/75" aria-hidden />
                   </div>
                   <div>
-                    <p className="font-heading text-primary text-sm font-semibold">{cat}</p>
-                    <p className="text-primary/40 font-body text-xs mt-0.5">{count} project{count !== 1 ? 's' : ''}</p>
+                    <p className="font-heading text-sm font-semibold text-primary">{category}</p>
+                    <p className="mt-0.5 font-body text-xs text-primary/65">
+                      {count} project{count !== 1 ? 's' : ''}
+                    </p>
                   </div>
-                </motion.button>
+                </Motion.button>
               )
             })}
           </div>
         </div>
       </section>
 
-      {/* ── CTA ─────────────────────────────────── */}
-      <section className="section-padding bg-tertiary border-t border-[#D7C2AD]">
+      <section className="section-padding border-t border-tertiary bg-white">
         <div className="container-custom text-center">
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <h2 className="font-heading text-h2 text-primary mb-4">
+          <Motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <h2 className="mb-4 font-heading text-h2 text-primary">
               Want to Be in Our <span className="text-gradient">Next Chapter?</span>
             </h2>
-            <p className="text-primary/40 font-body text-lg max-w-xl mx-auto mb-8">
-              Let's collaborate on something that ends up here. Tell us about your project.
+            <p className="mx-auto mb-8 max-w-xl font-body text-base text-primary/72 sm:text-lg">
+              Let us collaborate on something that belongs here next. Tell us about your project.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Link to="/contact" className="btn-primary">
                 Start a Project <ArrowRight size={16} />
               </Link>
@@ -291,10 +306,9 @@ export default function Portfolio() {
                 Explore Services
               </Link>
             </div>
-          </motion.div>
+          </Motion.div>
         </div>
       </section>
-
     </div>
   )
 }

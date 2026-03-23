@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion as Motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Megaphone, Monitor, Instagram, Printer, Video, Users, Target, BarChart2, PenTool, Calendar, TrendingUp, Search, Lightbulb } from 'lucide-react'
 import { services } from '../../data/services'
 import { testimonialsByService } from '../../data/testimonials'
 import { portfolio } from '../../data/portfolio'
 import { clientsByService } from '../../data/clients'
+import PageBanner from '../../components/shared/PageBanner'
 import ProcessTimeline from '../../components/shared/ProcessTimeline'
 import TestimonialsSlider from '../../components/shared/TestimonialsSlider'
 import PortfolioSlider from '../../components/shared/PortfolioSlider'
@@ -41,79 +42,72 @@ const process = [
   { icon:TrendingUp, step:'06', title:'Optimize & Scale',     desc:'Data-driven adjustments to maximise ROI and scale winning creatives.' },
 ]
 
-const GRID_STYLE = {
-  backgroundImage: 'linear-gradient(rgba(72,90,168,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(72,90,168,.08) 1px,transparent 1px)',
-  backgroundSize: '60px 60px',
-}
-
 export default function Advertising() {
   const [activeTab, setActiveTab] = useState('digital')
   const current = adTypes.find(t => t.id === activeTab)
 
   return (
-    <div className="bg-tertiary min-h-screen">
-      {/* Banner */}
-      <section className="relative min-h-[65vh] flex items-end pb-20 overflow-hidden">
-        <div className="absolute inset-0 bg-[#F4E8DC]" />
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary/15 via-[#F4E8DC] to-primary/10" />
-        <div className="absolute inset-0 opacity-5" style={GRID_STYLE} />
-        <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-secondary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
-        <div className="container-custom relative z-10 pt-40">
-          <motion.div initial={{ opacity:0, y:40 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.8 }}>
-            <div className="w-16 h-16 rounded-2xl bg-secondary/10 border border-secondary/20 flex items-center justify-center mb-6">
-              <Megaphone size={32} className="text-secondary" />
-            </div>
-            <span className="section-tag">Our Services</span>
-            <h1 className="font-heading text-display text-primary mb-6 max-w-3xl leading-tight">
-              Advertising That <span className="text-gradient">Converts</span>
-            </h1>
-            <p className="text-primary/50 font-body text-xl max-w-2xl mb-8">{s?.shortDesc}</p>
-            <Link to="/contact" className="btn-primary text-base px-8 py-4">Launch a Campaign <ArrowRight size={18}/></Link>
-          </motion.div>
-        </div>
-      </section>
+    <div className="bg-white min-h-screen">
+      <PageBanner
+        icon={Megaphone}
+        title="Marketing and Advertising That "
+        accent="Converts"
+        description={s?.shortDesc}
+        ctaLabel="Launch a Campaign"
+        gradientClass="from-secondary/15 via-white to-primary/10"
+        orbOneClass="bg-secondary/10"
+        orbTwoClass="bg-primary/10"
+        iconShellClass="bg-secondary/10 border-secondary/20"
+      />
 
       {/* Detailed Services */}
-      <section className="section-padding bg-tertiary">
+      <section className="section-padding bg-white">
         <div className="container-custom">
-          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
+          <Motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
             <span className="section-tag">What We Do</span>
             <h2 className="font-heading text-h2 text-primary">Campaign <span className="text-gradient">Services</span></h2>
-          </motion.div>
+          </Motion.div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {detailedServices.map((item, i) => (
-              <motion.div key={item.title} initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ delay:i*0.1 }}
+              <Motion.div key={item.title} initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} transition={{ delay:i*0.1 }}
                 className="card group hover:border-secondary/30">
                 <div className="w-11 h-11 rounded-xl bg-secondary/10 border border-secondary/20 flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
                   <item.icon size={20} className="text-secondary" />
                 </div>
                 <h3 className="font-heading text-primary text-base mb-2">{item.title}</h3>
                 <p className="text-primary/50 font-body text-sm leading-relaxed">{item.desc}</p>
-              </motion.div>
+              </Motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Types of Advertising — Tabs */}
-      <section className="section-padding bg-[#F4E8DC] border-y border-[#D7C2AD]">
+      <section className="section-padding bg-white border-y border-tertiary">
         <div className="container-custom">
-          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
+          <Motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
             <span className="section-tag">Ad Formats</span>
             <h2 className="font-heading text-h2 text-primary">Types of <span className="text-gradient">Advertising</span></h2>
-          </motion.div>
-          <div className="grid lg:grid-cols-3 gap-8 items-start">
+          </Motion.div>
+          <div className="grid gap-6 lg:grid-cols-3 lg:gap-8 items-start">
             {/* Tab buttons */}
-            <div className="flex flex-col gap-2">
+            <div role="tablist" aria-label="Advertising formats" className="flex flex-col gap-2">
               {adTypes.map(t => (
-                <button key={t.id} onClick={() => setActiveTab(t.id)}
-                  className={`flex items-center gap-3 px-5 py-3.5 rounded-xl text-left border transition-all duration-300 ${
+                <button
+                  key={t.id}
+                  id={`ad-tab-${t.id}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === t.id}
+                  aria-controls={`ad-panel-${t.id}`}
+                  tabIndex={activeTab === t.id ? 0 : -1}
+                  onClick={() => setActiveTab(t.id)}
+                  className={`flex min-h-[52px] items-center gap-3 rounded-xl border px-5 py-3.5 text-left transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/35 focus-visible:ring-offset-2 ${
                     activeTab === t.id
                       ? 'bg-secondary/10 border-secondary/40 text-primary'
-                      : 'bg-tertiary border-[#D7C2AD] text-primary/50 hover:text-primary/70'
+                      : 'bg-white border-tertiary text-primary/70 hover:text-primary'
                   }`}>
-                  <t.icon size={16} className={activeTab === t.id ? 'text-secondary' : 'text-primary/30'} />
+                  <t.icon size={16} className={activeTab === t.id ? 'text-secondary' : 'text-primary/55'} />
                   <span className="font-heading text-sm">{t.label}</span>
                   {activeTab === t.id && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-secondary" />}
                 </button>
@@ -122,15 +116,18 @@ export default function Advertising() {
             {/* Tab content */}
             <div className="lg:col-span-2">
               <AnimatePresence mode="wait">
-                <motion.div key={activeTab}
+                <Motion.div key={activeTab}
                   initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} exit={{ opacity:0, y:-20 }} transition={{ duration:0.3 }}
-                  className="bg-tertiary border border-[#D7C2AD] rounded-card p-8 min-h-[220px]">
+                  id={`ad-panel-${activeTab}`}
+                  role="tabpanel"
+                  aria-labelledby={`ad-tab-${activeTab}`}
+                  className="min-h-[220px] rounded-card border border-primary/12 bg-white p-6 shadow-[0_12px_28px_rgba(72,90,168,0.08)] sm:p-8">
                   <div className="w-14 h-14 rounded-2xl bg-secondary/10 border border-secondary/20 flex items-center justify-center mb-5">
                     <current.icon size={26} className="text-secondary" />
                   </div>
                   <h3 className="font-heading text-primary text-xl mb-4">{current.label}</h3>
-                  <p className="text-primary/60 font-body text-base leading-relaxed">{current.desc}</p>
-                </motion.div>
+                  <p className="text-primary/74 font-body text-base leading-relaxed">{current.desc}</p>
+                </Motion.div>
               </AnimatePresence>
             </div>
           </div>
@@ -138,55 +135,55 @@ export default function Advertising() {
       </section>
 
       {/* Process */}
-      <section className="section-padding bg-tertiary">
+      <section className="section-padding bg-white">
         <div className="container-custom">
-          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
+          <Motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
             <span className="section-tag">How We Work</span>
             <h2 className="font-heading text-h2 text-primary">Our Campaign <span className="text-gradient">Process</span></h2>
-          </motion.div>
+          </Motion.div>
           <ProcessTimeline steps={process} />
         </div>
       </section>
 
       {/* Portfolio */}
-      <section className="section-padding bg-[#F4E8DC] border-y border-[#D7C2AD]">
+      <section className="section-padding bg-white border-y border-tertiary">
         <div className="container-custom">
-          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
+          <Motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
             <span className="section-tag">Our Work</span>
             <h2 className="font-heading text-h2 text-primary">Campaign <span className="text-gradient">Portfolio</span></h2>
-          </motion.div>
+          </Motion.div>
           <PortfolioSlider items={items} />
         </div>
       </section>
 
       {/* Clients */}
-      <section className="section-padding bg-tertiary">
+      <section className="section-padding bg-white">
         <div className="container-custom">
-          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
+          <Motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
             <span className="section-tag">Clients</span>
             <h2 className="font-heading text-h2 text-primary">Brands We've <span className="text-gradient">Promoted</span></h2>
-          </motion.div>
+          </Motion.div>
           <ClientsGrid items={clientList} />
         </div>
       </section>
 
       {/* Testimonials */}
-      <section className="section-padding bg-[#F4E8DC] border-y border-[#D7C2AD]">
+      <section className="section-padding bg-white border-y border-tertiary">
         <div className="container-custom">
-          <motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
+          <Motion.div initial={{ opacity:0, y:30 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }} className="text-center mb-14">
             <span className="section-tag">Testimonials</span>
             <h2 className="font-heading text-h2 text-primary">Client <span className="text-gradient">Feedback</span></h2>
-          </motion.div>
+          </Motion.div>
           <TestimonialsSlider items={reviews} />
         </div>
       </section>
 
       {/* CTA */}
-      <section className="section-padding bg-tertiary">
+      <section className="section-padding bg-white">
         <div className="container-custom text-center">
           <h2 className="font-heading text-h2 text-primary mb-4">Ready to <span className="text-gradient">Advertise?</span></h2>
           <p className="text-primary/50 font-body mb-8 max-w-lg mx-auto">Let's craft campaigns that make your brand impossible to ignore.</p>
-          <Link to="/contact" className="btn-primary text-base px-8 py-4">Start a Campaign <ArrowRight size={18}/></Link>
+          <Link to="/contact" className="btn-primary text-base px-8 py-4 shadow-[0_16px_34px_rgba(72,90,168,0.24)]">Start a Campaign <ArrowRight size={18}/></Link>
         </div>
       </section>
     </div>

@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#485AA8" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#4DB4C0" stop-opacity="0.12"/>
+    </linearGradient>
+    <linearGradient id="ocean" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F4F7FF"/>
+      <stop offset="100%" stop-color="#EEFAFC"/>
+    </linearGradient>
+    <linearGradient id="land" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#485AA8" stop-opacity="0.72"/>
+      <stop offset="100%" stop-color="#4DB4C0" stop-opacity="0.68"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1000" height="520" rx="28" fill="url(#bg)"/>
+  <rect x="34" y="34" width="932" height="452" rx="20" fill="url(#ocean)" stroke="#485AA8" stroke-opacity="0.16"/>
+
+  <!-- Graticule -->
+  <g stroke="#485AA8" stroke-opacity="0.1" stroke-width="1">
+    <path d="M84 146H916"/>
+    <path d="M84 220H916"/>
+    <path d="M84 294H916"/>
+    <path d="M84 368H916"/>
+    <path d="M180 84V436"/>
+    <path d="M300 84V436"/>
+    <path d="M420 84V436"/>
+    <path d="M540 84V436"/>
+    <path d="M660 84V436"/>
+    <path d="M780 84V436"/>
+  </g>
+
+  <!-- Continents (simplified real-world layout) -->
+  <g fill="url(#land)">
+    <!-- North America -->
+    <path d="M142 160L178 132L233 119L287 126L325 145L338 174L327 198L298 214L271 229L254 251L224 261L196 251L172 231L151 214L136 188Z"/>
+    <!-- Greenland -->
+    <path d="M283 94L307 82L333 86L343 103L330 118L302 118L287 106Z"/>
+    <!-- South America -->
+    <path d="M286 267L311 279L329 305L332 338L322 368L300 402L276 416L264 402L269 374L279 349L283 321L273 294Z"/>
+
+    <!-- Europe -->
+    <path d="M443 159L472 150L504 154L525 169L521 188L496 200L465 197L447 184Z"/>
+    <!-- Africa -->
+    <path d="M479 211L514 223L538 252L540 295L525 336L499 370L472 366L458 334L456 293L465 252Z"/>
+
+    <!-- Middle East -->
+    <path d="M531 204L562 203L583 215L578 232L552 239L530 231Z"/>
+    <!-- Asia -->
+    <path d="M545 172L596 156L671 152L741 169L793 198L807 230L794 254L756 269L715 269L672 254L633 245L603 231L573 208L551 195Z"/>
+    <!-- India -->
+    <path d="M614 246L632 252L636 269L626 284L609 278L603 260Z"/>
+    <!-- SE Asia islands -->
+    <path d="M655 280L676 286L686 302L675 314L654 309L644 295Z"/>
+    <path d="M699 296L711 303L709 316L695 319L687 309Z"/>
+    <!-- Japan -->
+    <path d="M807 224L817 217L824 223L822 234L812 238Z"/>
+
+    <!-- Australia -->
+    <path d="M735 344L774 332L820 338L846 359L842 384L810 401L759 399L725 378Z"/>
+  </g>
+
+  <!-- Global market + regional hub pins -->
+  <g>
+    <!-- UK -->
+    <circle cx="455" cy="176" r="6.5" fill="#4DB4C0"/>
+    <circle cx="455" cy="176" r="14" fill="#4DB4C0" fill-opacity="0.22"/>
+
+    <!-- UAE -->
+    <circle cx="569" cy="226" r="6.5" fill="#4DB4C0"/>
+    <circle cx="569" cy="226" r="14" fill="#4DB4C0" fill-opacity="0.22"/>
+
+    <!-- India -->
+    <circle cx="621" cy="266" r="7.2" fill="#4DB4C0"/>
+    <circle cx="621" cy="266" r="16" fill="#4DB4C0" fill-opacity="0.24"/>
+
+    <!-- Singapore -->
+    <circle cx="669" cy="304" r="6.5" fill="#4DB4C0"/>
+    <circle cx="669" cy="304" r="14" fill="#4DB4C0" fill-opacity="0.22"/>
+
+    <!-- Pune / Mumbai / Bengaluru -->
+    <circle cx="620" cy="264" r="4.2" fill="#485AA8"/>
+    <circle cx="614" cy="260" r="3.8" fill="#485AA8"/>
+    <circle cx="619" cy="273" r="3.8" fill="#485AA8"/>
+  </g>
+</svg>

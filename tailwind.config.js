@@ -27,8 +27,8 @@ export default {
         },
       },
       fontFamily: {
-        heading: ['Sarpanch', 'sans-serif'],
-        body:    ['Avenir Next', 'Avenir', 'system-ui', 'sans-serif'],
+        heading: ['Sora', 'Manrope', 'sans-serif'],
+        body:    ['Manrope', 'Avenir Next', 'Avenir', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         'display': ['4.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],

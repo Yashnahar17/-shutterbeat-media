@@ -1,9 +1,10 @@
 import { useRef } from 'react'
-import { motion } from 'framer-motion'
+import { motion as Motion } from 'framer-motion'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Pagination, Navigation } from 'swiper/modules'
-import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Star, Quote, ChevronLeft, ChevronRight, ShieldCheck } from 'lucide-react'
 import { testimonials } from '../data/testimonials'
+import SectionHeading from '../components/ui/SectionHeading'
 
 // Import Swiper styles
 import 'swiper/css'
@@ -11,35 +12,30 @@ import 'swiper/css/pagination'
 import 'swiper/css/navigation'
 
 function StarRating({ rating }) {
+  const safeRating = Math.max(0, Math.min(5, Number(rating) || 5))
   return (
     <div className="flex items-center gap-1">
-      {Array.from({ length: rating }).map((_, i) => (
+      {Array.from({ length: safeRating }).map((_, i) => (
         <Star key={i} size={14} className="text-secondary fill-secondary" />
       ))}
     </div>
   )
 }
 
-// Avatar placeholder with initials
 function Avatar({ name }) {
-  const initials = name
+  const safeName = typeof name === 'string' && name.trim() ? name.trim() : 'Guest'
+  const initials = safeName
     .split(' ')
     .map(n => n[0])
     .join('')
     .slice(0, 2)
     .toUpperCase()
 
-  const colors = [
-    'bg-primary',
-    'bg-secondary',
-    'bg-tertiary text-primary',
-    'bg-primary-light',
-    'bg-secondary-light',
-  ]
-  const color = colors[name.charCodeAt(0) % colors.length]
+  const colors = ['bg-primary/15', 'bg-secondary/20', 'bg-white', 'bg-primary/10']
+  const color = colors[safeName.charCodeAt(0) % colors.length]
 
   return (
-    <div className={`w-12 h-12 rounded-full ${color} flex items-center justify-center font-heading font-bold text-sm text-primary shrink-0`}>
+    <div className={`w-12 h-12 rounded-full ${color} border border-tertiary flex items-center justify-center font-heading font-bold text-sm text-primary shrink-0`}>
       {initials}
     </div>
   )
@@ -50,133 +46,104 @@ export default function TestimonialsSection() {
   const nextRef = useRef(null)
 
   return (
-    <section className="section-padding bg-tertiary relative overflow-hidden">
-
-      {/* Background decorations */}
-      <div className="absolute top-1/2 left-0 w-72 h-72 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 pointer-events-none" />
-      <div className="absolute top-1/2 right-0 w-72 h-72 bg-secondary/5 rounded-full blur-3xl -translate-y-1/2 pointer-events-none" />
-
-      {/* Large quote decoration */}
-      <div className="absolute top-12 right-12 opacity-5 pointer-events-none">
-        <Quote size={180} className="text-primary" />
-      </div>
-
+    <section className="section-padding bg-white relative overflow-hidden">
+      <div className="absolute -top-24 -left-20 w-72 h-72 bg-primary/12 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-24 -right-20 w-72 h-72 bg-secondary/18 rounded-full blur-3xl pointer-events-none" />
       <div className="container-custom relative z-10">
-
-        {/* ── HEADING ──────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
+        <Motion.div
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-xl mx-auto mb-14">
+          className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-12">
+          <SectionHeading
+            tag="Testimonials"
+            title="Loved By"
+            accent="Our Clients"
+            description="Real words from partners who trusted ShutterBeat Media with their brand, visuals, and growth."
+            className="max-w-xl"
+          />
+        </Motion.div>
 
-          <span className="section-tag">Testimonials</span>
-
-          <h2 className="font-heading text-h2 text-primary mb-4">
-            What Our{' '}
-            <span className="text-gradient">Clients Say</span>
-          </h2>
-
-          <p className="text-primary/50 font-body text-base">
-            Real words from real people we have had the pleasure of working with.
-          </p>
-        </motion.div>
-
-        {/* ── SLIDER ───────────────────────────── */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
+        <Motion.div
+          initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.6 }}
           className="relative">
-
           <Swiper
             modules={[Autoplay, Pagination, Navigation]}
             spaceBetween={24}
             slidesPerView={1}
-            autoplay={{ delay: 4000, disableOnInteraction: false, pauseOnMouseEnter: true }}
-            pagination={{ clickable: true, el: '.swiper-pagination-custom' }}
-            navigation={{ prevEl: prevRef.current, nextEl: nextRef.current }}
+            autoplay={{ delay: 4200, disableOnInteraction: false, pauseOnMouseEnter: true }}
+            pagination={{ clickable: true, el: '.home-testimonials-pagination' }}
+            navigation
             onBeforeInit={(swiper) => {
               swiper.params.navigation.prevEl = prevRef.current
-              swiper.params.navigation.nextEl  = nextRef.current
+              swiper.params.navigation.nextEl = nextRef.current
             }}
             breakpoints={{
-              640:  { slidesPerView: 2 },
+              640: { slidesPerView: 2 },
               1024: { slidesPerView: 3 },
             }}
-            className="pb-4">
-
+            className="pb-2">
             {testimonials.map((t) => (
               <SwiperSlide key={t.id}>
-                <div className="group relative flex flex-col bg-[#F4E8DC] border border-[#D7C2AD] rounded-card p-7 h-full hover:border-primary/30 hover:-translate-y-1 hover:shadow-card-hover transition-all duration-300">
-
-                  {/* Top row — quote icon + stars */}
+                <article className="group relative flex h-full min-h-[290px] flex-col overflow-hidden rounded-[1.4rem] border border-primary/12 bg-white/92 backdrop-blur-sm p-5 sm:p-6 md:p-7 shadow-[0_14px_34px_rgba(72,90,168,0.1)] hover:shadow-[0_20px_44px_rgba(72,90,168,0.14)] hover:-translate-y-1 transition-all duration-300">
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-primary opacity-70" />
                   <div className="flex items-center justify-between mb-5">
-                    <div className="w-9 h-9 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-                      <Quote size={16} className="text-primary" />
-                    </div>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-[11px] font-body font-semibold tracking-wide text-primary">
+                      <ShieldCheck size={12} className="text-secondary" /> Verified Client
+                    </span>
                     <StarRating rating={t.rating} />
                   </div>
-
-                  {/* Testimonial text */}
-                  <p className="text-primary/60 font-body text-sm leading-relaxed flex-1 mb-6 italic">
-                    "{t.text}"
-                  </p>
-
-                  {/* Divider */}
-                  <div className="h-px bg-[#D7C2AD] mb-5" />
-
-                  {/* Author */}
+                  <div className="relative mb-6 flex-1">
+                    <Quote size={18} className="text-secondary/90 mb-2" />
+                    <p className="text-[color:#2F3F82] font-body text-sm sm:text-[15px] leading-relaxed italic">"{t.text}"</p>
+                  </div>
+                  <div className="h-px bg-primary/12 mb-5" />
                   <div className="flex items-center gap-3">
                     <Avatar name={t.name} />
                     <div>
-                      <p className="font-heading text-primary text-sm">{t.name}</p>
-                      <p className="text-primary/40 font-body text-xs mt-0.5">{t.role}</p>
+                      <p className="font-heading text-primary text-sm sm:text-[15px]">{t.name}</p>
+                      <p className="font-body text-primary/65 text-xs sm:text-sm mt-0.5 leading-snug">{t.role}</p>
                     </div>
                   </div>
-
-                  {/* Hover glow */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-card pointer-events-none" />
-                </div>
+                </article>
               </SwiperSlide>
             ))}
           </Swiper>
-
-          {/* Custom pagination dots */}
-          <div className="swiper-pagination-custom flex justify-center gap-2 mt-8" />
-
-          {/* Custom nav arrows */}
-          <div className="flex items-center justify-center gap-3 mt-6">
+          <div className="home-testimonials-pagination flex justify-center gap-2 mt-8" />
+          <div className="flex items-center justify-center gap-3 mt-5">
             <button
               ref={prevRef}
-              className="w-10 h-10 rounded-full border border-[#D7C2AD] flex items-center justify-center text-primary/50 hover:text-primary hover:border-primary hover:bg-primary/10 transition-all duration-200">
-              <ChevronLeft size={18} />
+              type="button"
+              aria-label="Previous testimonial"
+              className="w-11 h-11 rounded-full border border-tertiary bg-white text-primary/70 hover:text-primary hover:border-primary hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2">
+              <ChevronLeft size={18} className="mx-auto" />
             </button>
             <button
               ref={nextRef}
-              className="w-10 h-10 rounded-full border border-[#D7C2AD] flex items-center justify-center text-primary/50 hover:text-primary hover:border-primary hover:bg-primary/10 transition-all duration-200">
-              <ChevronRight size={18} />
+              type="button"
+              aria-label="Next testimonial"
+              className="w-11 h-11 rounded-full border border-tertiary bg-white text-primary/70 hover:text-primary hover:border-primary hover:-translate-y-0.5 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:ring-offset-2">
+              <ChevronRight size={18} className="mx-auto" />
             </button>
           </div>
-
-        </motion.div>
+        </Motion.div>
       </div>
-
-      {/* Swiper pagination dot styles */}
       <style>{`
-        .swiper-pagination-custom .swiper-pagination-bullet {
-          width: 8px; height: 8px;
-          background: rgba(72,90,168,0.2);
+        .home-testimonials-pagination .swiper-pagination-bullet {
+          width: 9px;
+          height: 9px;
           border-radius: 9999px;
-          display: inline-block;
-          cursor: pointer;
+          background: rgba(72, 90, 168, 0.25);
+          opacity: 1;
           transition: all 0.3s;
         }
-        .swiper-pagination-custom .swiper-pagination-bullet-active {
+        .home-testimonials-pagination .swiper-pagination-bullet-active {
+          width: 28px;
           background: #485AA8;
-          width: 24px;
         }
       `}</style>
     </section>
